@@ -9,7 +9,6 @@ import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import { Home } from "./pages/Home";
 import { Sidebar } from "./components/Sidebar";
 import Header from "./components/Header";
-import vid from "./assets/456055_Bangkok_Thailand_Asia_3840x2160.mp4";
 
 import { MyContext } from "./Context/Context";
 import { useState } from "react";
@@ -47,7 +46,10 @@ function App() {
       <Router>
         <div className="App" id={theme}>
           <video autoPlay muted loop id="myVideo">
-            <source src={vid} type="video/mp4" />
+            <source
+              src="https://firebasestorage.googleapis.com/v0/b/study-swift-be3d8.appspot.com/o/456055_Bangkok_Thailand_Asia_3840x2160.mp4?alt=media&token=b1d0f786-ab5d-494c-adf2-91c57d362ba0"
+              type="video/mp4"
+            />
             Your browser does not support HTML5 video.
           </video>
           <Sidebar />
