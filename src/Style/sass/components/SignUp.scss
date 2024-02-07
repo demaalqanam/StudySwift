@@ -1,0 +1,112 @@
+// Import Vaiables //
+@use "../variables/index.scss" as *;
+
+.SignUp {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 34343;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .signup-window {
+    position: relative;
+    width: 50%;
+    // height: 500px;
+    border-radius: 7px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 0 40px;
+
+    .close-icon {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      width: 30px;
+      height: 30px;
+      cursor: pointer;
+    }
+    h3 {
+      margin: 20px 0 20px;
+    }
+    .profile-img {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      label {
+        border-radius: 4px;
+        border: 1px solid #ddd;
+        margin: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        background: #fff;
+        cursor: pointer;
+      }
+      .p-img {
+        border-radius: 50%;
+      }
+    }
+
+    form {
+      width: 60%;
+      .form-group {
+        margin: 10px 0;
+      }
+      .create-btns {
+        text-align: center;
+        margin: 20px 0 0;
+
+        .btn {
+          margin: 0 20px;
+          width: 100px;
+          color: $text-white;
+          font-weight: 600;
+        }
+        .create-btn {
+          background-color: $secondary-color;
+        }
+        .cancel-btn {
+          border: 1px solid #ddd;
+          color: $secondary-dark-color;
+        }
+      }
+    }
+  }
+}
+
+// Dark Mode Styling //
+
+#light .signup-window {
+  background-color: $first_light_BG;
+  color: $dark-primary-color;
+}
+#dark .signup-window {
+  background-color: $secondary-dark-color;
+  color: $first_light_BG;
+}
+#dark .signup-window .upload-label {
+  background-color: $secondary-color;
+  color: $first_light_BG;
+  border: none;
+}
+#dark .signup-window input {
+  background-color: $dark-primary-color;
+  color: $first_light_BG;
+  border-color: $dark-primary-color;
+  color-scheme: dark;
+}
+#dark .signup-window .form-select {
+  background-color: $dark-primary-color;
+  color: $first_light_BG;
+  border-color: $dark-primary-color;
+}
+#dark .signup-window .cancel-btn {
+  background-color: $dark-primary-color;
+  color: $first_light_BG;
+  border-color: $dark-primary-color;
+}

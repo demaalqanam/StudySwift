@@ -1,0 +1,87 @@
+// Import Variables //
+@use "../variables/index.scss" as *;
+
+.settings-b {
+  margin: 20px 0;
+  position: relative;
+  .g-icon-c {
+    text-align: center;
+  }
+  .g-icon {
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    transition: all ease 0.3s;
+    &.clicked {
+      transform: rotate(60deg);
+    }
+  }
+}
+
+.SettingsWindow {
+  position: absolute;
+  left: 180px;
+  top: -170px;
+  width: 250px;
+  height: 200px;
+  padding: 10px;
+  border-radius: 6px;
+  box-shadow: 0 0 21px 1px #0000001c;
+
+  .options {
+    padding: 15px 0;
+    border-top: 1px solid $text-dark-min;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    .signup-btn {
+      display: flex;
+      justify-content: center;
+      border-radius: 4px;
+      /* padding: 4px 0; */
+      margin: 10px 0;
+      color: #ffffff;
+      font-weight: 600;
+      cursor: pointer;
+      align-items: center;
+      background-color: #bdc65b;
+      width: 100%;
+      height: 34px;
+
+      p {
+        margin: 0;
+      }
+      background-color: $secondary-color;
+      &:hover {
+        background-color: #abb826;
+      }
+    }
+    .switch-btn {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      gap: 10px;
+      height: 40px;
+
+      label {
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+//Light and Dark Theme Mode Styling //
+
+#light .SettingsWindow {
+  background-color: $first_light_BG;
+  color: $dark-primary-color;
+}
+#dark .SettingsWindow {
+  background-color: $secondary-dark-color;
+  color: $text-white;
+}
+#dark .SettingsWindow .options {
+  border-top: 1px solid $border_dark_color;
+}

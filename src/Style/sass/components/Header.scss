@@ -1,0 +1,121 @@
+// Import Vaiables //
+@use "../variables/index.scss" as *;
+
+.header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+  height: 70px;
+  width: 82%;
+  left: 50%;
+  transform: translateX(-42%);
+  border-radius: 12px;
+  position: absolute;
+  z-index: 1;
+  padding: 10px 40px !important;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+
+  // Logout window ////
+  .logout-window {
+    position: relative;
+    .options {
+      position: absolute;
+      right: -112px;
+      top: 64px;
+      width: 200px;
+      height: 100px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      border-radius: 6px;
+
+      .btn {
+        width: 80%;
+        height: 30px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        background-color: $second_light_BG;
+      }
+    }
+  }
+  .signin-buttons {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin: 0 40px;
+    .btn {
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 4px;
+      text-align: center;
+      font-size: 16px;
+      &.signin-b {
+        color: $text-white;
+        background-color: $secondary-color;
+      }
+      &.signup-b {
+        border: 1px solid $text-dark-min;
+        color: inherit;
+      }
+    }
+  }
+
+  .profile-corner {
+    display: flex;
+    cursor: pointer;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 125px;
+    width: 130px;
+    padding: 1px 4px;
+    height: 45px;
+    background-color: $secondary-color;
+    color: $first_light_BG;
+
+    h4 {
+      margin: 0 0 0 10px;
+      font-weight: 600;
+      font-size: 17px;
+      color: $text-white;
+    }
+
+    .img-container {
+      img {
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+      }
+    }
+  }
+}
+
+// Dark theme Styling
+#light .header {
+  background-color: $first_light_BG;
+  color: $text-dark-min;
+}
+#dark .header {
+  background-color: $secondary-dark-color;
+  color: $text-white;
+}
+#dark .header .logout-window .options {
+  background-color: $secondary-dark-color;
+  color: $text-white;
+}
+#dark .header .logout-window .options .btn {
+  background-color: $secondary-color;
+  color: $text-white;
+}
+#light .header .logout-window .options {
+  background-color: $first_light_BG;
+  color: $text-dark-min;
+}

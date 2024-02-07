@@ -1,0 +1,92 @@
+// Import variables //
+@use "../variables/index.scss" as *;
+
+// Icons Css
+.icon {
+  min-width: 20px;
+  min-height: 20px;
+  margin: 0 10px;
+}
+
+// Sidebar styling
+.sidebar {
+  width: 14%;
+  min-width: 135px;
+  border-radius: 13px;
+  position: relative;
+  z-index: 2;
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
+
+  .side-cont {
+    height: 100px;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    height: 80%;
+  }
+  .logo-b {
+    text-align: center;
+    height: 11%;
+    border-bottom: 1px solid $text-dark-min;
+  }
+  .side-menu {
+    margin: 240px 0;
+    ul {
+      list-style: none;
+      padding: 0;
+      li {
+        margin: 10px 0;
+        font-weight: 600;
+        display: flex;
+        width: 100%;
+        justify-content: flex-end;
+        position: relative;
+        height: 29px;
+        a {
+          display: flex;
+          text-decoration: none;
+          justify-content: center;
+          width: 100%;
+          align-items: center;
+        }
+        svg {
+          position: absolute;
+          left: 5px;
+          top: 5px;
+        }
+        a.active {
+          background-color: $secondary-color;
+          color: #ffff;
+          border-radius: 6px;
+        }
+        &.active a {
+          color: #ffff;
+        }
+      }
+    }
+  }
+}
+
+// Dark Mode Styling //
+
+#light .sidebar {
+  background-color: $first_light_BG;
+  color: $dark-primary-color;
+}
+#dark .sidebar .side-menu ul li a {
+  color: $text-white;
+}
+#light .sidebar .side-menu ul li a {
+  color: $text_dark_color;
+}
+#light .sidebar .side-menu ul li a.active {
+  color: $text-white;
+}
+#dark .sidebar {
+  background-color: $secondary-dark-color;
+  color: $first_light_BG;
+}
+#dark .sidebar .logo-b {
+  border-bottom: 1px solid $border_dark_color;
+}

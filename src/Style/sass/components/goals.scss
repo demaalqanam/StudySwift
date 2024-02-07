@@ -1,0 +1,247 @@
+// Import The vaiables //
+@use "../variables/index.scss" as *;
+
+/// Edit and add Form ////
+.goal-form {
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 500px;
+  height: 513px;
+  z-index: 8888;
+  border-radius: 6px;
+  padding: 20px;
+
+  .form-btns {
+    margin-top: 10px;
+    display: flex;
+    .btn {
+      height: 32px;
+      margin-right: 10px;
+    }
+    .create-btn {
+      background-color: $secondary-color;
+      color: $text-white;
+    }
+  }
+}
+.goals {
+  width: 100%;
+  height: 88%;
+  border-radius: 8px;
+  margin-top: 85px;
+  position: relative;
+  opacity: 0.9;
+
+  /// Are you sure window ///
+  .areyousure-window {
+    position: absolute;
+    left: 34%;
+    top: 30%;
+    z-index: 9999;
+    width: 240px;
+    height: 130px;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    border-radius: 6px;
+
+    p {
+      text-align: center;
+    }
+    .btn {
+      margin-top: 5px;
+    }
+    .delete {
+      margin-top: 10px;
+      background-color: $second_light_BG;
+    }
+  }
+  .goals-header {
+    display: flex;
+    padding: 15px;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 13px;
+
+    .btn {
+      background-color: $secondary-color;
+      color: $text-white;
+      font-weight: 600;
+      font-size: 14px;
+      height: 35px;
+    }
+    .title {
+      width: 55%;
+      h3 {
+        font-weight: 600;
+      }
+    }
+  }
+  .golas-cont {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    align-items: center;
+    height: 100%;
+    .goal-item {
+      background-color: $second_light_BG;
+      width: 90%;
+      border-radius: 10px;
+      height: 260px;
+      justify-content: space-between;
+      display: flex;
+      position: relative;
+      align-items: center;
+      flex-direction: column;
+      padding: 15px;
+
+      .g-check {
+        position: absolute;
+        width: 119px;
+        right: -8px;
+        top: -2px;
+        text-align: center;
+
+        text-align: center;
+        svg {
+          width: 65px;
+          height: 65px;
+          color: $secondary-color;
+        }
+        p {
+          font-size: 12px;
+          width: 110px;
+        }
+      }
+      .goal-header {
+        display: flex;
+        width: 100%;
+        height: 20%;
+
+        div {
+          width: 30%;
+        }
+        .icons {
+          display: flex;
+
+          h4 {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: $secondary-color;
+            color: $text-white;
+          }
+          svg {
+            width: 21px;
+            height: 21px;
+            margin: 4px 0 4px 15px;
+            cursor: pointer;
+          }
+        }
+
+        .goal-title {
+          width: 40%;
+          text-align: center;
+          h3 {
+            font-size: 20px;
+          }
+        }
+      }
+
+      .g-middle {
+        display: flex;
+        margin-top: 29px;
+        width: 98%;
+        height: 50%;
+        justify-content: space-between;
+
+        .goal-dates {
+          width: 31%;
+          .dates {
+            display: flex;
+            width: 100%;
+            p {
+              font-size: 14px;
+              font-weight: 600;
+              margin: 2px 5px !important;
+              width: fit-content;
+            }
+          }
+        }
+        p {
+          font-size: 14px;
+          width: 60%;
+        }
+      }
+
+      .g-progress {
+        display: flex;
+        width: 100%;
+        margin-top: 10px;
+        justify-content: space-between;
+        div {
+          font-size: 14px;
+          font-weight: 600;
+        }
+        .p-parent {
+          width: 93%;
+          height: 15px;
+          background-color: #ddd;
+          border-radius: 20px;
+          margin-top: 4px;
+          position: relative;
+          .p-child {
+            position: absolute;
+            left: 0;
+            top: 0;
+            background-color: $secondary-color;
+            border-radius: 20px;
+            height: 15px;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Dark theme Styling
+#light .goals,
+#light .goal-form,
+#light textarea,
+#light .cancel-btn,
+#light .goals .areyousure-window {
+  background-color: $first_light_BG !important;
+  color: $dark-primary-color !important;
+}
+#dark .goals,
+#dark .goal-form,
+#dark input,
+#dark textarea,
+#dark .cancel-btn,
+#dark .goals .areyousure-window {
+  background-color: $secondary-dark-color !important;
+  color: $text-white !important;
+  border: 1px solid $border_dark_color !important;
+}
+#dark .goals .golas-cont .goal-item {
+  background-color: $dark-primary-color;
+  color: $text-dark-min;
+}
+#light .goals .golas-cont .goal-item {
+  color: $dark-primary-color;
+}
+#dark .goals .goals-header {
+  border-bottom: 1px solid $border_dark_color;
+}
+// #dark .header .logout-window .options .btn {
+//   background-color: $secondary-color;
+//   color: $text-white;
+// }
+// #light .header .logout-window .options {
+//   background-color: $first_light_BG;
+//   color: $text-dark-min;
+// }

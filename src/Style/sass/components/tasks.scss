@@ -1,0 +1,124 @@
+// Import The vaiables //
+@use "../variables/index.scss" as *;
+
+.tasks {
+  width: 40%;
+  margin-top: 80px;
+  position: relative;
+  border-radius: 6px;
+  height: 80%;
+  background-color: $first_light_BG;
+  padding: 20px 15px;
+  .tasks-header {
+    width: 100%;
+    height: 47px;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid $border_dark_color;
+
+    .h-btn {
+      background-color: $primary-color;
+      height: 34px;
+      border-radius: 6px;
+      color: $text-white;
+      button {
+        color: $text-white;
+      }
+    }
+  }
+
+  .tasks-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+    .task-item {
+      border-radius: 6px;
+      padding: 10px;
+      background-color: $second_light_BG;
+
+      .t-i-header {
+        display: flex;
+        padding: 5px 10px;
+        justify-content: space-between;
+
+        .i-icon svg {
+          width: 20px;
+          height: 20px;
+          cursor: pointer;
+        }
+      }
+
+      .i-body {
+        display: flex;
+        justify-content: space-between;
+
+        .i-desc {
+          width: 80%;
+          p {
+            font-size: 14px;
+          }
+        }
+        .i-check-icon {
+          width: 45px;
+          height: 45px;
+          background: #fff;
+          border-radius: 6px;
+          cursor: pointer;
+
+          svg {
+            width: 40px;
+            height: 40px;
+            color: $secondary-color;
+          }
+        }
+      }
+    }
+  }
+
+  //// Create form
+  .task-form {
+    position: absolute;
+    width: 100%;
+    height: 323px;
+    background-color: aliceblue;
+    border-radius: 6px;
+    z-index: 8888;
+    padding: 15px;
+
+    .form-btns {
+      margin-top: 10px;
+      display: flex;
+      .btn {
+        height: 32px;
+        margin-right: 10px;
+      }
+      .create-btn {
+        background-color: $secondary-color;
+        color: $text-white;
+      }
+    }
+  }
+}
+
+//Light and Dark Theme Mode Styling //
+
+#light .tasks {
+  background-color: $first_light_BG;
+  color: $dark-primary-color;
+}
+#dark .tasks {
+  background-color: $secondary-dark-color;
+  color: $text-white;
+}
+#dark .task-item {
+  background-color: $dark-primary-color;
+  color: $text-white;
+}
+#dark .i-check-icon {
+  background-color: $secondary-dark-color;
+  color: $text-white;
+}
+#dark .SettingsWindow .options {
+  border-top: 1px solid $border_dark_color;
+}
