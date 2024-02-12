@@ -3,7 +3,7 @@
 
 .header {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   margin-bottom: 20px;
   height: 70px;
   width: 82%;
@@ -15,6 +15,13 @@
   padding: 10px 40px !important;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
+
+  //// Session tools
+  .session-tools {
+    svg {
+      color: $text_dark_color;
+    }
+  }
 
   // Logout window ////
   .logout-window {

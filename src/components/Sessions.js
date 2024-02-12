@@ -1,13 +1,50 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { FaGear } from "react-icons/fa6";
 import { useTimer } from "react-timer-hook";
+import { auth, db } from "../config/firebase";
+import { FaForward, FaBackward } from "react-icons/fa";
+import { BiHide } from "react-icons/bi";
+
+// import 'react-h5-audio-player/lib/styles.less' Use LESS
+// import 'react-h5-audio-player/src/styles.scss' Use SASS
+import {
+  collection,
+  doc,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
+import Stopwatch from "./StopWatch";
+import MusicPlayer from "./MusicPlayer";
+import { MyContext } from "../Context/Context";
 
 function Sessions() {
   const time = new Date();
   const [showChooseTime, setShowChooseTime] = useState(false);
-  const [choosedTime, setChoosedTime] = useState();
-  time.setSeconds(time.getSeconds() + 600); // 10 minutes timer
+  const {
+    changeBGForward,
+    changeBGBackward,
+    cuurentBG,
+    showTimer,
+    setShowTimer,
+    showMusicPlayer,
+    setShowMusicPlayer,
+    showBGChanger,
+    setShowBGChanger,
+  } = useContext(MyContext);
 
+  const [choosedTime, setChoosedTime] = useState();
+  const [currentTime, setCurrentTime] = useState(1500);
+  const [goalsList, setGoalsList] = useState([]);
+  const [selectedGoal, setSelectedGoal] = useState();
+  const [showStopWatch, setShowStopWatch] = useState(false);
+
+  const btn1 = useRef();
+  const btn2 = useRef();
+
+  time.setSeconds(time.getSeconds() + currentTime); // 10 minutes timer
+  const goalsCollectionRef = collection(db, "Gooals");
   const {
     totalSeconds,
     seconds,
@@ -21,8 +58,24 @@ function Sessions() {
     restart,
   } = useTimer({
     expiryTimestamp: time,
-    onExpire: () => console.warn("onExpire called"),
+    onExpire: () => handleUpdateGoal(),
   });
+
+  useEffect(() => {
+    getGoals();
+    pause();
+  }, []);
+
+  //// Change time action /////
+  const handleChangeTime = () => {
+    const newTime = choosedTime * 60;
+
+    setCurrentTime(newTime);
+    setShowChooseTime(false);
+    const time = new Date();
+    time.setSeconds(time.getSeconds() + newTime);
+    restart(time);
+  };
 
   const choseTimeInput = () => {
     return (
@@ -34,50 +87,170 @@ function Sessions() {
           onChange={(e) => setChoosedTime(e.target.value)}
           type="number"
         />
-        <button className="btn">Set</button>
+        <button onClick={handleChangeTime} className="btn">
+          Set
+        </button>
+      </div>
+    );
+  };
+
+  // Get goals data
+  const getGoals = async () => {
+    try {
+      const q = query(
+        goalsCollectionRef,
+        where("owner", "==", auth.currentUser?.uid)
+      );
+      const data = await getDocs(q);
+      const List = data.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+      console.log(List);
+      setGoalsList(List);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  /////// Update the goal
+  const handleUpdateGoal = async () => {
+    let goal = selectedGoal?.split(",");
+    let selectedDurationToSeconds = choosedTime * 60;
+    console.log(goal[1], selectedDurationToSeconds);
+    const goalDoc = doc(db, "Gooals", goal[0]);
+    await updateDoc(goalDoc, {
+      progress: Number(goal[1]) + selectedDurationToSeconds,
+    })
+      .then((res) => {})
+      .catch((err) => console.error(err));
+  };
+
+  console.log(showBGChanger, showMusicPlayer, showTimer);
+
+  /// Handle navigate timer
+  const handleNavigate = (e) => {
+    const links = [btn1, btn2];
+    setShowStopWatch((current) => (current === true ? false : true));
+    links.map((link) => {
+      link.current.classList.remove("active");
+    });
+    e.target.classList.add("active");
+  };
+
+  /// Change background component
+  const ChnageBGComponent = () => {
+    return (
+      <div className="change-bg">
+        <BiHide
+          onClick={() => setShowBGChanger(false)}
+          className="icon hide-i"
+        />
+        <h6>Change the background</h6>
+        <p>{cuurentBG?.name}.</p>
+        <div className="change-btns">
+          <button className="btn center">
+            <FaBackward onClick={changeBGBackward} className="icon" />
+          </button>
+          <button className="btn center">
+            <FaForward onClick={changeBGForward} className="icon" />
+          </button>
+        </div>
       </div>
     );
   };
   return (
     <div className="sessions">
-      <div className="timer">
-        <div className="timer-h">
-          {showChooseTime ? choseTimeInput() : ""}
-          <h3>Study Timer</h3>
-          <div className="timer-type">
-            <button className="btn active">Pomodoro</button>
-            <button className="btn">Timer</button>
-          </div>
+      <div className="row">
+        <div className="col">
+          {showMusicPlayer ? (
+            <MusicPlayer setShowMusicPlayer={setShowMusicPlayer} />
+          ) : (
+            ""
+          )}
+          {showBGChanger ? <ChnageBGComponent /> : ""}
         </div>
-        <div className="t-numbers">
-          <div>
-            <span>{days}</span>:<span>{hours}</span>:<span>{minutes}</span>:
-            <span>{seconds}</span>
-          </div>
-          <div className="g-icon">
-            <button onClick={start}>Start</button>
-            <FaGear
-              onClick={() =>
-                setShowChooseTime((current) =>
-                  current === true ? false : true
-                )
-              }
-            />
-          </div>
-        </div>
-        <div className="timer-btns">
-          <button onClick={pause}>Pause</button>
-          <button onClick={resume}>Resume</button>
-          <button
-            onClick={() => {
-              // Restarts to 5 minutes timer
-              const time = new Date();
-              time.setSeconds(time.getSeconds() + 600);
-              restart(time);
-            }}
-          >
-            Restart
-          </button>
+        <div className="col">
+          {showTimer ? (
+            <div className="timer">
+              <BiHide
+                onClick={() => setShowTimer(false)}
+                className="icon hide-i"
+              />
+              <div className="timer-h">
+                {showChooseTime ? choseTimeInput() : ""}
+                <h3>Study Timer</h3>
+                <div className="timer-type">
+                  <button
+                    onClick={(e) => handleNavigate(e)}
+                    ref={btn1}
+                    className="btn active"
+                  >
+                    Pomodoro
+                  </button>
+                  <button
+                    onClick={(e) => handleNavigate(e)}
+                    ref={btn2}
+                    className="btn"
+                  >
+                    Timer
+                  </button>
+                </div>
+              </div>
+              {showStopWatch ? (
+                <Stopwatch />
+              ) : (
+                <div className="timer-body">
+                  <div className="t-numbers">
+                    <div>
+                      <span>{days}</span>:<span>{hours}</span>:
+                      <span>{minutes}</span>:<span>{seconds}</span>
+                    </div>
+                    <div className="g-icon">
+                      <button onClick={start}>Start</button>
+                      <FaGear
+                        onClick={() =>
+                          setShowChooseTime((current) =>
+                            current === true ? false : true
+                          )
+                        }
+                      />
+                    </div>
+                  </div>
+                  <div className="timer-btns">
+                    <button onClick={pause}>Pause</button>
+                    <button onClick={resume}>Resume</button>
+                    <button
+                      onClick={() => {
+                        // Restarts to 5 minutes timer
+                        const time = new Date();
+                        time.setSeconds(time.getSeconds() + currentTime);
+                        restart(time);
+                      }}
+                    >
+                      Restart
+                    </button>
+                    <select
+                      onChange={(e) => setSelectedGoal(e.target.value)}
+                      class="form-select"
+                      aria-label="Default select example"
+                    >
+                      <option selected>Choose Goal</option>
+                      {goalsList?.map((goal) => {
+                        return (
+                          <option value={[goal.id, goal.progress]}>
+                            {goal?.title}
+                          </option>
+                        );
+                      })}
+                    </select>
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : (
+            ""
+          )}
         </div>
       </div>
     </div>

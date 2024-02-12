@@ -11,13 +11,15 @@ import {
   deleteDoc,
   doc,
   getDocs,
+  query,
   updateDoc,
+  where,
 } from "firebase/firestore";
 
 function Goals() {
   const [showWindow, setShowWindow] = useState(false);
   const { setOverlay, overlay } = useContext(MyContext);
-  const [goalsList, setGoalsList] = useState([]);
+  const [goalsList, setGoalsList] = useState(null);
   const [goalDesc, setGoalDesc] = useState();
   const [goalTitle, SetGoalTitle] = useState();
   const [goalDuration, SetGoalDuration] = useState();
@@ -40,7 +42,11 @@ function Goals() {
   // Get goals data
   const getGoals = async () => {
     try {
-      const data = await getDocs(goalsCollectionRef);
+      const q = query(
+        goalsCollectionRef,
+        where("owner", "==", auth.currentUser.uid)
+      );
+      const data = await getDocs(q);
       const List = data.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id,
@@ -65,6 +71,11 @@ function Goals() {
       hour12: true,
     };
     let dateString = currentDate.toLocaleString("en-US", options);
+
+    /// Hours To minutes
+    let minutes = goalDuration * 60;
+    /// To seconds
+    let seconds = minutes * 60;
     if (selectedGoal === null) {
       //// Creation
       try {
@@ -74,7 +85,7 @@ function Goals() {
           deadline: goalDeadline,
           creationDate: dateString,
           owner: auth.currentUser.uid,
-          studyDuration: goalDuration,
+          studyDuration: seconds,
           cheked: false,
           progress: 0,
         }).then((res) => {
@@ -125,8 +136,9 @@ function Goals() {
     setGoalDesc("");
     SetGoalTitle("");
     SetGoalDuration();
+    setSelectedGoal(null);
   };
-
+  console.log(selectedGoal);
   ///////////////////////////
   /// Handle Delete Action ///
   const handleDelete = async () => {
@@ -232,13 +244,18 @@ function Goals() {
     );
   };
 
-  //   if (goalsList === null) return <div>Loading</div>;
+  const secondsToHours = (goal) => {
+    let seconds = goal?.studyDuration;
+    let hours = seconds / 3600;
+
+    return hours;
+  };
 
   return (
     <>
       {showWindow ? GoalForm() : ""}
+      {areYouSureWindow ? areYouSure() : ""}
       <div className="goals">
-        {areYouSureWindow ? areYouSure() : ""}
         <div className="goals-header">
           <div className="title">
             <h3>Your Goals</h3>
@@ -249,7 +266,7 @@ function Goals() {
         </div>
 
         <div className="golas-cont">
-          {goalsList.length === 0 ? (
+          {goalsList === null ? (
             <div className="loading-c center">
               <div class="spinner-border" role="status"></div>
             </div>
@@ -300,7 +317,7 @@ function Goals() {
                       <p>Deadline:</p> <p>{goal?.deadline}</p>
                     </div>
                     <div className="dates">
-                      <p>Study duration:</p> <p>{goal?.studyDuration}</p>
+                      <p>Study duration:</p> <p>{secondsToHours(goal)}</p>
                     </div>
                   </div>
                 </div>

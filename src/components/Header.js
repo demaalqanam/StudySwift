@@ -3,10 +3,22 @@ import { FaQuestionCircle } from "react-icons/fa";
 import { MyContext } from "../Context/Context";
 import { auth } from "../config/firebase";
 import { getAuth, signOut } from "firebase/auth";
+import { SiApplemusic } from "react-icons/si";
+import { RxLapTimer } from "react-icons/rx";
+import { FaImage } from "react-icons/fa";
 
 function Header() {
-  const { theme, setOverlay, setLogin, setSignup, handleRerender } =
-    useContext(MyContext);
+  const {
+    setOverlay,
+    setLogin,
+    setSignup,
+    handleRerender,
+    setShowTimer,
+
+    setShowMusicPlayer,
+
+    setShowBGChanger,
+  } = useContext(MyContext);
   const [showOptions, setShowOptions] = useState(false);
   // const user = auth?.currentUser;
   const [user, setUser] = useState(null);
@@ -56,6 +68,19 @@ function Header() {
 
   return (
     <div className="header ">
+      <div className="session-tools">
+        <div className="tools-cont">
+          <button onClick={() => setShowBGChanger(true)} className="btn">
+            <FaImage className="icon" />
+          </button>
+          <button onClick={() => setShowTimer(true)} className="btn">
+            <RxLapTimer className="icon" />
+          </button>
+          <button onClick={() => setShowMusicPlayer(true)} className="btn">
+            <SiApplemusic className="icon" />
+          </button>
+        </div>
+      </div>
       {showOptions ? (
         <div className="logout-window">
           <div className="options">

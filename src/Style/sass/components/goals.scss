@@ -26,6 +26,31 @@
     }
   }
 }
+
+/// Are you sure window ///
+.areyousure-window {
+  position: absolute;
+  left: 45%;
+  top: 30%;
+  z-index: 9999;
+  width: 240px;
+  height: 130px;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  border-radius: 6px;
+
+  p {
+    text-align: center;
+  }
+  .btn {
+    margin-top: 5px;
+  }
+  .delete {
+    margin-top: 10px;
+    background-color: $second_light_BG;
+  }
+}
 .goals {
   width: 100%;
   height: 88%;
@@ -34,30 +59,6 @@
   position: relative;
   opacity: 0.9;
 
-  /// Are you sure window ///
-  .areyousure-window {
-    position: absolute;
-    left: 34%;
-    top: 30%;
-    z-index: 9999;
-    width: 240px;
-    height: 130px;
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
-    border-radius: 6px;
-
-    p {
-      text-align: center;
-    }
-    .btn {
-      margin-top: 5px;
-    }
-    .delete {
-      margin-top: 10px;
-      background-color: $second_light_BG;
-    }
-  }
   .goals-header {
     display: flex;
     padding: 15px;
@@ -213,7 +214,7 @@
 #light .goal-form,
 #light textarea,
 #light .cancel-btn,
-#light .goals .areyousure-window {
+#light .areyousure-window {
   background-color: $first_light_BG !important;
   color: $dark-primary-color !important;
 }
@@ -222,7 +223,7 @@
 #dark input,
 #dark textarea,
 #dark .cancel-btn,
-#dark .goals .areyousure-window {
+#dark .areyousure-window {
   background-color: $secondary-dark-color !important;
   color: $text-white !important;
   border: 1px solid $border_dark_color !important;

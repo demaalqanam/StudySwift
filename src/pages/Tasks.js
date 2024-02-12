@@ -12,6 +12,7 @@ import {
   orderBy,
   query,
   updateDoc,
+  where,
 } from "firebase/firestore";
 import { auth, db } from "../config/firebase";
 import { MdDeleteOutline } from "react-icons/md";
@@ -26,7 +27,6 @@ function Tasks() {
   const [showTaskForm, setShowTaskForm] = useState(false);
 
   const tasksCollectionRef = collection(db, "Tasks");
-  const q = query(tasksCollectionRef, orderBy("creationDate"));
 
   useEffect(() => {
     getTasks();
@@ -76,7 +76,14 @@ function Tasks() {
   // Get tasks
   const getTasks = async () => {
     try {
+      const q = query(
+        tasksCollectionRef,
+        where("owner", "==", "7ogU1vyf0yee7vSuRCeZmFJC2AF2"),
+        orderBy("creationDate", "desc")
+      );
+
       const data = await getDocs(q);
+
       const List = data.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id,
