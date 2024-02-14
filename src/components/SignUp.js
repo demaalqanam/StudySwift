@@ -9,56 +9,85 @@ import {
 } from "firebase/auth";
 import { storage, db } from "../config/firebase";
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
-import { getDocs, collection, addDoc } from "firebase/firestore";
+import {
+  getDocs,
+  collection,
+  addDoc,
+  doc,
+  updateDoc,
+} from "firebase/firestore";
 
-function SignUp() {
-  const { overlay, setOverlay, setSignup } = useContext(MyContext);
+function SignUp({ editProfileMode, currentUserData, setEditProfileMode }) {
+  const { setOverlay, setSignup } = useContext(MyContext);
   const [imgUrl, setImgUrl] = useState(null);
   const [progresspercent, setProgresspercent] = useState(0);
   const [signupSuccessed, setSignupSuccessed] = useState(true);
+  const [email, setEmail] = useState();
+  const [gender, setGender] = useState();
+  const [fullName, setFullName] = useState();
+  const [birthDate, setBirthDate] = useState();
 
   const usersCollectionRef = collection(db, "users");
 
   useEffect(() => {
     getUsersData();
+    fillData();
   }, []);
+
+  /// Fill user data form
+  const fillData = () => {
+    if (editProfileMode) {
+      setEmail(currentUserData.Email);
+      setBirthDate(currentUserData.birthDate);
+      setFullName(currentUserData.fullName);
+      setGender(currentUserData.Gender);
+      setImgUrl(currentUserData.profileImg);
+    }
+  };
 
   /// Create New User
   const createNewPofile = async (e) => {
     e.preventDefault();
-
-    // Handle create email and password for the user
-
-    await createUserWithEmailAndPassword(
-      auth,
-      e.target.email.value,
-      e.target.Password.value
-    )
-      .then((res) => {
-        setSignupSuccessed(true);
-        try {
-          addDoc(usersCollectionRef, {
-            Email: e.target.email.value,
-            Gender: e.target.gender.value,
-            fullName: e.target.fullname.value,
-            profileImg: imgUrl,
-            birthDate: e.target.birthday.value,
-          });
-          cancelSignUp();
-        } catch (error) {
-          console.error(error);
-        }
+    if (editProfileMode) {
+      /// Handle update profile
+      const userDoc = doc(db, "users", currentUserData.id);
+      await updateDoc(userDoc, {
+        profileImg: imgUrl,
+        fullName: fullName,
+        birthDate: birthDate,
+        Email: email,
       })
-      .catch((err) => {
-        setSignupSuccessed(false);
-        console.error(err.message);
-      });
-
-    // Setting user info to use everywhere
-    await updateProfile(auth.currentUser, {
-      displayName: e.target.fullname.value,
-      photoURL: imgUrl,
-    });
+        .then((res) => {
+          cancelSignUp();
+        })
+        .catch((err) => console.error(err));
+    } else {
+      // Handle create email and password for the user
+      await createUserWithEmailAndPassword(
+        auth,
+        e.target.email.value,
+        e.target.Password.value
+      )
+        .then((res) => {
+          setSignupSuccessed(true);
+          try {
+            addDoc(usersCollectionRef, {
+              Email: email,
+              Gender: e.target.gender.value,
+              fullName: email,
+              profileImg: imgUrl,
+              birthDate: birthDate,
+            });
+            cancelSignUp();
+          } catch (error) {
+            console.error(error);
+          }
+        })
+        .catch((err) => {
+          setSignupSuccessed(false);
+          console.error(err.message);
+        });
+    }
   };
   // Get users data
   const getUsersData = async () => {
@@ -73,9 +102,11 @@ function SignUp() {
       console.error(error);
     }
   };
-  const cancelSignUp = () => {
+  const cancelSignUp = (e) => {
+    e.preventDefault();
     setOverlay(false);
     setSignup(false);
+    setEditProfileMode(false);
   };
 
   // Upload Profile image
@@ -106,8 +137,12 @@ function SignUp() {
   return (
     <div className=" SignUp">
       <div className="signup-window">
-        <IoCloseSharp onClick={cancelSignUp} className="close-icon" />
-        <h3>Create Your Acount.</h3>
+        {editProfileMode ? (
+          ""
+        ) : (
+          <IoCloseSharp onClick={cancelSignUp} className="close-icon" />
+        )}
+        <h3>{editProfileMode ? "Update Profile" : "Create Your Acount."}</h3>
         <div className="profile-img">
           <img
             alt="profile"
@@ -138,6 +173,8 @@ function SignUp() {
               class="form-control"
               id="fullname"
               aria-describedby="emailHelp"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
             />
             {signupSuccessed ? (
               ""
@@ -149,15 +186,31 @@ function SignUp() {
           </div>
           <div class="form-group">
             <label for="email">Email</label>
-            <input type="email" class="form-control" id="email" />
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              class="form-control"
+              id="email"
+            />
           </div>
-          <div class="form-group">
-            <label for="Password">Password</label>
-            <input type="password" class="form-control" id="Password" />
-          </div>
+          {editProfileMode ? (
+            ""
+          ) : (
+            <div class="form-group">
+              <label for="Password">Password</label>
+              <input type="password" class="form-control" id="Password" />
+            </div>
+          )}
           <div class="form-group">
             <label for="birthday">Birthday</label>
-            <input type="date" class="form-control" id="birthday" />
+            <input
+              type="date"
+              class="form-control"
+              id="birthday"
+              value={birthDate}
+              onChange={(e) => setBirthDate(e.target.value)}
+            />
           </div>
           <select
             id="gender"
@@ -170,9 +223,9 @@ function SignUp() {
           </select>
           <div className="create-btns">
             <button type="submit" class="btn create-btn">
-              Create
+              {editProfileMode ? "Update" : "Create"}
             </button>
-            <button onClick={cancelSignUp} type="submit" class="btn cancel-btn">
+            <button onClick={cancelSignUp} class="btn cancel-btn">
               Cancel
             </button>
           </div>

@@ -63,7 +63,6 @@ function LogIn(closeLogin) {
     const email = e.target.email.value;
     const password = e.target.Password.value;
 
-    console.log(email, password);
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed in

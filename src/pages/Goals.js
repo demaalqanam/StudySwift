@@ -138,7 +138,7 @@ function Goals() {
     SetGoalDuration();
     setSelectedGoal(null);
   };
-  console.log(selectedGoal);
+
   ///////////////////////////
   /// Handle Delete Action ///
   const handleDelete = async () => {
@@ -317,7 +317,8 @@ function Goals() {
                       <p>Deadline:</p> <p>{goal?.deadline}</p>
                     </div>
                     <div className="dates">
-                      <p>Study duration:</p> <p>{secondsToHours(goal)}</p>
+                      <p>Study duration:</p>{" "}
+                      <p>{secondsToHours(goal)} (Hours)</p>
                     </div>
                   </div>
                 </div>

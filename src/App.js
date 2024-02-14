@@ -6,6 +6,7 @@ import "./Style/sass/components/goals.scss";
 import "./Style/sass/components/tasks.scss";
 import "./Style/sass/components/sessions.scss";
 import "./Style/sass/components/stopWatch.scss";
+import "./Style/sass/components/profile.scss";
 import "./Style/sass/components/FAQ.scss";
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import { Home } from "./pages/Home";
@@ -21,6 +22,7 @@ import Goals from "./pages/Goals";
 import Tasks from "./pages/Tasks";
 import Sessions from "./components/Sessions";
 import FAQ from "./pages/FAQ";
+import Profile from "./pages/Profile";
 
 const backgrounds = [
   {
@@ -114,6 +116,7 @@ function App() {
               <Route path="/Tasks" element={<Tasks />} />
               <Route path="/Sessions" element={<Sessions />} />
               <Route path="/FAQ" element={<FAQ />} />
+              <Route path="/Profile" element={<Profile />} />
             </Routes>
           </div>
           {login ? <SignIn /> : ""}

@@ -1,14 +1,24 @@
-import { collection, getDocs, query, where } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { FaRegEdit } from "react-icons/fa";
 import { IoMdAdd } from "react-icons/io";
 import { db } from "../config/firebase";
 import { MyContext } from "../Context/Context";
+import { AiFillDelete } from "react-icons/ai";
 
 function FAQ() {
   const [faqsList, setFaqsList] = useState(null);
   const [selectedSubject, setSelectedSubject] = useState(null);
   const [showForm, setShowForm] = useState(false);
+  const [selectedFAQ, setSelectedFAQ] = useState();
   const { setOverlay, overlay } = useContext(MyContext);
   const FAQsRef = collection(db, "FAQs");
   const subject1 = useRef();
@@ -23,7 +33,6 @@ function FAQ() {
 
   // Get FAQs data
   const getFaq = async (subject) => {
-    console.log(subject);
     try {
       const q = query(
         FAQsRef,
@@ -51,13 +60,40 @@ function FAQ() {
 
   /// Show create form
   const handleShowCreateForm = () => {
-    setOverlay(true);
-    setShowForm(true);
+    setOverlay((current) => (current === true ? false : true));
+    setShowForm((current) => (current === true ? false : true));
   };
 
   // Create new faq ////
   const handleCreateFaq = async (e) => {
-    console.log(e.target);
+    e.preventDefault();
+
+    //// Creation
+    try {
+      await addDoc(FAQsRef, {
+        title: e.target.title.value,
+        description: e.target.description.value,
+        subject: e.target.subject.value,
+      }).then((res) => {
+        getFaq(e.target.subject.value);
+        handleShowCreateForm();
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  /// Handle Delete Action ///
+  const handleDelete = async (id, subject) => {
+    console.log(id, subject);
+    try {
+      const FAQDoc = doc(db, "FAQs", id);
+      await deleteDoc(FAQDoc).then(() => {
+        getDocs(subject);
+      });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   /// Create FAQ form ///
@@ -73,8 +109,12 @@ function FAQ() {
             <label for="description">Description:</label>
             <textarea rows={4} class="form-control" id="description" />
           </div>
-          <select class="form-select" aria-label="Default select example">
-            <option selected>Select the subject</option>
+          <select
+            id="subject"
+            class="form-select"
+            aria-label="Default select example"
+          >
+            <option defaultValue>Select the subject</option>
             <option value="Logging">Logging</option>
             <option value="Sessions">Sessions</option>
             <option value="Goals">Goals</option>
@@ -84,7 +124,7 @@ function FAQ() {
           <button type="submit" class="btn c">
             Submit
           </button>
-          <button type="" class="btn">
+          <button onClick={handleShowCreateForm} type="" class="btn">
             Cancel
           </button>
         </form>
@@ -132,7 +172,7 @@ function FAQ() {
                     in, etc.
                   </p>
                 </div>
-                {true ? (
+                {false ? (
                   <div className="h-btns">
                     <button onClick={handleShowCreateForm} className="btn">
                       Create FAQ <IoMdAdd />{" "}
@@ -154,7 +194,14 @@ function FAQ() {
                 {faqsList?.map((faq, index) => {
                   return (
                     <div key={index} className="f-item">
-                      <FaRegEdit className="icon" />
+                      {false ? (
+                        <AiFillDelete
+                          onClick={() => handleDelete(faq.id, faq.subject)}
+                          className="icon"
+                        />
+                      ) : (
+                        " "
+                      )}
                       <h4>{faq.title}</h4>
                       <p>{faq.description}</p>
                     </div>

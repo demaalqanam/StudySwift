@@ -90,11 +90,14 @@
 
   .faqs-body {
     width: 100%;
-    height: 100%;
+    height: 600px;
     display: flex;
     flex-direction: column;
     gap: 15px;
     margin-top: 20px;
+    overflow: hidden;
+    overflow-y: scroll;
+    /* overflow-y: auto; */
     padding: 0 15px;
 
     .f-item {
@@ -108,8 +111,28 @@
       }
       svg {
         position: absolute;
-        right: 15px;
+        right: 35px;
+        cursor: pointer;
       }
     }
   }
+}
+
+// Dark theme Styling
+#light .faq {
+  background-color: $first_light_BG;
+  color: $text_dark_color;
+}
+#dark .faq {
+  background-color: $dark-primary-color;
+  color: $text-white !important;
+}
+#dark .faq-sidebar ul {
+  background-color: $secondary-dark-color;
+  color: $text-white !important;
+}
+#dark .f-item {
+  background-color: $secondary-dark-color;
+  box-shadow: none;
+  color: $text-white !important;
 }
