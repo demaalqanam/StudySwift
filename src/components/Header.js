@@ -10,9 +10,8 @@ import { Link, useLocation } from "react-router-dom";
 
 function Header() {
   const {
-    setOverlay,
-    setLogin,
-    setSignup,
+    showLogin,
+    showSignUp,
     handleRerender,
     setShowTimer,
     setShowMusicPlayer,
@@ -20,34 +19,26 @@ function Header() {
   } = useContext(MyContext);
   const [showOptions, setShowOptions] = useState(false);
   // const user = auth?.currentUser;
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState();
   const [loading, setLoading] = useState(true);
+  const [count, setCount] = useState(1);
   const { pathname } = useLocation();
 
-  console.log(pathname);
-
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      setUser(user);
-      setLoading(false);
+    auth.onAuthStateChanged(function (user) {
+      if (user) {
+        setLoading(false);
+        setUser(user);
+        console.log("user loged in");
+        // User is signed in.
+      } else {
+        console.log("Not Signed in");
+        // No user is signed in.
+      }
     });
-    return () => {
-      unsubscribe(); // Unsubscribe from the onAuthStateChanged listener when component unmounts
-    };
   }, []);
 
-  console.log(user);
-
   //
-  // Show login and sign up actions
-  const showLogin = () => {
-    setOverlay((current) => (current === false ? true : false));
-    setLogin((current) => (current === false ? true : false));
-  };
-  const showSignUp = () => {
-    setOverlay((current) => (current === false ? true : false));
-    setSignup((current) => (current === false ? true : false));
-  };
 
   // Logout action
   const logout = async () => {
@@ -60,15 +51,6 @@ function Header() {
       console.error(err);
     }
   };
-
-  // loading
-  if (loading) {
-    return (
-      <div className="loading">
-        <div class="spinner-border" role="status"></div>
-      </div>
-    );
-  }
 
   return (
     <div className="header ">
@@ -93,7 +75,7 @@ function Header() {
             </div>
           </div>
         </div>
-        <div className="col"></div>
+
         <div className="col d-flex justify-content-end">
           {showOptions ? (
             <div className="logout-window">
@@ -113,7 +95,7 @@ function Header() {
           ) : (
             ""
           )}
-          {user === null ? (
+          {auth.currentUser === null ? (
             <div className="signin-buttons">
               <FaQuestionCircle className="icon" />
               <button onClick={showLogin} className="btn signin-b">
@@ -128,19 +110,32 @@ function Header() {
               onClick={() =>
                 setShowOptions((current) => (current === true ? false : true))
               }
-              className="profile-corner gradient-custom"
+              className="profile-corner "
             >
+              <div
+                style={{
+                  top: "23%",
+                  display: auth.currentUser === null ? "block" : "none",
+                }}
+                className="loading-c  position-absolute"
+              >
+                <div class="spinner-border" role="status"></div>
+              </div>
               <div className="img-container">
                 <img
                   alt="profile"
                   src={
-                    user?.photoURL === null
-                      ? "https://www.alleganyco.gov/wp-content/uploads/unknown-person-icon-Image-from.png"
-                      : user?.photoURL
+                    auth.currentUser?.photoURL === null
+                      ? "https://firebasestorage.googleapis.com/v0/b/study-swift-be3d8.appspot.com/o/files%2F2815428.png?alt=media&token=0e4e0bfc-5575-4358-baae-b8055ec2a61f"
+                      : auth.currentUser?.photoURL
                   }
                 />
               </div>
-              <h4>{user?.displayName?.split(" ")[0]}</h4>
+              <h4>
+                {auth.currentUser.displayName === null
+                  ? "Student"
+                  : auth.currentUser?.displayName?.split(" ")[0]}
+              </h4>
             </div>
           )}
         </div>

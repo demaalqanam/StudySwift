@@ -72,6 +72,10 @@
       font-weight: 600;
       font-size: 14px;
       height: 35px;
+
+      svg {
+        color: $text-white !important;
+      }
     }
     .title {
       width: 55%;

@@ -4,4 +4,28 @@
 .profile {
   margin-top: 90px;
   height: 70%;
+
+  .card {
+    border: none;
+
+    .back-btn {
+      right: 20px;
+      top: 10px;
+      color: $text_dark_color;
+      font-size: 14px;
+    }
+  }
+}
+
+// Dark theme Styling
+#light .profile .card {
+  background-color: $first_light_BG;
+  color: $text_dark_color;
+}
+#dark .back-btn {
+  color: $text-white;
+}
+#dark .profile .card {
+  background-color: $secondary-dark-color;
+  color: $text-white !important;
 }

@@ -28,6 +28,7 @@
   }
   .logo-b {
     text-align: center;
+    margin-top: 30px;
     height: 11%;
     border-bottom: 1px solid $text-dark-min;
   }
@@ -58,11 +59,11 @@
         }
         a.active {
           background-color: $secondary-color;
-          color: #ffff;
+          color: $text-white;
           border-radius: 6px;
-        }
-        &.active a {
-          color: #ffff;
+          svg {
+            color: $text-white !important;
+          }
         }
       }
     }

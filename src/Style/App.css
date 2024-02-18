@@ -22,6 +22,11 @@ p {
   color: #5ba6c6;
   z-index: 44444;
 }
+.loading-c.p-img {
+  position: absolute;
+  left: 46%;
+  top: 12%;
+}
 .overlay {
   position: absolute;
   top: 0;
@@ -39,6 +44,12 @@ p {
 }
 #dark input {
   color-scheme: dark;
+}
+.light {
+  color: #fff !important;
+}
+.black {
+  color: #242424 !important;
 }
 
 .container {

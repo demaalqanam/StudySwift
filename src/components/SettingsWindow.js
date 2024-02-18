@@ -1,16 +1,39 @@
 import React, { useState, useContext } from "react";
 import { FaMoon, Sign } from "react-icons/fa";
-import { PiSignInBold } from "react-icons/pi";
+import { PiSignInBold, PiSignOut } from "react-icons/pi";
 import "../Style/sass/components/SettingsW.scss";
 import { MyContext } from "../Context/Context";
 import ReactSwitch from "react-switch";
+import { auth } from "../config/firebase";
+import { signOut } from "firebase/auth";
 
-function SettingsWindow() {
-  const { theme, setTheme } = useContext(MyContext);
-  console.log(theme);
+function SettingsWindow({ setShowSettings }) {
+  const { theme, setTheme, handleRerender, showLogin } = useContext(MyContext);
+  auth.onAuthStateChanged(function (user) {
+    if (user) {
+      console.log(" Signed in");
+
+      // User is signed in.
+    } else {
+      console.log("Not Signed in");
+      // No user is signed in.
+    }
+  });
 
   const toggleTheme = () => {
     setTheme((current) => (current === "light" ? "dark" : "light"));
+  };
+
+  // Logout action
+  const logout = async () => {
+    setShowSettings(false);
+    try {
+      await signOut(auth);
+      handleRerender();
+      localStorage.removeItem("uid");
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
@@ -21,10 +44,23 @@ function SettingsWindow() {
           <label>Dark Mode</label>
           <ReactSwitch onChange={toggleTheme} checked={theme === "dark"} />
         </div>
-        <div className="signup-btn">
-          <PiSignInBold className="icon" />
-          <p>Sign Up</p>
-        </div>
+        {auth.currentUser === null ? (
+          <div
+            onClick={() => {
+              showLogin();
+              setShowSettings(false);
+            }}
+            className="signup-btn"
+          >
+            <PiSignInBold className="icon light" />
+            <p>Log in</p>
+          </div>
+        ) : (
+          <div onClick={logout} className="signup-btn">
+            <PiSignOut className="icon" />
+            <p>Log out</p>
+          </div>
+        )}
       </div>
     </div>
   );

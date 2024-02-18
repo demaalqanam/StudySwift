@@ -49,6 +49,7 @@
       }
       .p-img {
         border-radius: 50%;
+        background-color: $first_light_BG;
       }
     }
 
@@ -89,6 +90,7 @@
   background-color: $secondary-dark-color;
   color: $first_light_BG;
 }
+
 #dark .signup-window .upload-label {
   background-color: $secondary-color;
   color: $first_light_BG;

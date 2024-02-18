@@ -6,7 +6,7 @@ import { RiPlayListFill } from "react-icons/ri";
 import songsData from "../assets/audio/songs.json";
 import aud from "../assets/audio/town-10169.mp3";
 import { BiHide } from "react-icons/bi";
-function MusicPlayer({ setShowMusicPlayer }) {
+function MusicPlayer({ showMusicPlayer, setShowMusicPlayer }) {
   const [showLibrary, setShowLibrary] = useState(false);
   const [currentSong, setCurrentSong] = useState();
 
@@ -21,7 +21,10 @@ function MusicPlayer({ setShowMusicPlayer }) {
   };
 
   return (
-    <div className="m-player">
+    <div
+      className="m-player"
+      style={{ display: `${showMusicPlayer ? "flex" : "none"}` }}
+    >
       <BiHide
         onClick={() => setShowMusicPlayer(false)}
         className="icon hide-i"

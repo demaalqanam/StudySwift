@@ -4,8 +4,10 @@ import { MyContext } from "../Context/Context";
 import { auth } from "../config/firebase";
 import {
   createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
   updateCurrentUser,
   updateProfile,
+  updatePassword,
 } from "firebase/auth";
 import { storage, db } from "../config/firebase";
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
@@ -17,8 +19,14 @@ import {
   updateDoc,
 } from "firebase/firestore";
 
-function SignUp({ editProfileMode, currentUserData, setEditProfileMode }) {
-  const { setOverlay, setSignup } = useContext(MyContext);
+function SignUp({
+  editProfileMode,
+  currentUserData,
+  setEditProfileMode,
+  getUserData,
+  setProfileILodaing,
+}) {
+  const { closeLogin, handleRerender } = useContext(MyContext);
   const [imgUrl, setImgUrl] = useState(null);
   const [progresspercent, setProgresspercent] = useState(0);
   const [signupSuccessed, setSignupSuccessed] = useState(true);
@@ -26,11 +34,11 @@ function SignUp({ editProfileMode, currentUserData, setEditProfileMode }) {
   const [gender, setGender] = useState();
   const [fullName, setFullName] = useState();
   const [birthDate, setBirthDate] = useState();
+  const [uploadLoading, setUploadLoading] = useState(false);
 
   const usersCollectionRef = collection(db, "users");
 
   useEffect(() => {
-    getUsersData();
     fillData();
   }, []);
 
@@ -48,6 +56,22 @@ function SignUp({ editProfileMode, currentUserData, setEditProfileMode }) {
   /// Create New User
   const createNewPofile = async (e) => {
     e.preventDefault();
+    let user = auth.currentUser;
+    // Update password if any
+    if (e.target.Password.value !== "") {
+      console.log(e.target.Password.value);
+      let newPasswordd = e.target.Password.value;
+
+      await updatePassword(auth.currentUser, newPasswordd)
+        .then(() => {
+          // Update successful.
+          console.log("password updated");
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+
     if (editProfileMode) {
       /// Handle update profile
       const userDoc = doc(db, "users", currentUserData.id);
@@ -59,6 +83,13 @@ function SignUp({ editProfileMode, currentUserData, setEditProfileMode }) {
       })
         .then((res) => {
           cancelSignUp();
+          setProfileILodaing(true);
+
+          // Setting user info to use everywhere
+          updateProfile(auth.currentUser, {
+            displayName: fullName,
+            photoURL: imgUrl,
+          });
         })
         .catch((err) => console.error(err));
     } else {
@@ -70,13 +101,20 @@ function SignUp({ editProfileMode, currentUserData, setEditProfileMode }) {
       )
         .then((res) => {
           setSignupSuccessed(true);
+          updateProfile(auth.currentUser, {
+            displayName: fullName,
+            photoURL: imgUrl,
+          });
           try {
             addDoc(usersCollectionRef, {
               Email: email,
               Gender: e.target.gender.value,
-              fullName: email,
+              fullName: fullName,
               profileImg: imgUrl,
               birthDate: birthDate,
+              role: "Student",
+            }).then((res) => {
+              handleRerender();
             });
             cancelSignUp();
           } catch (error) {
@@ -89,28 +127,18 @@ function SignUp({ editProfileMode, currentUserData, setEditProfileMode }) {
         });
     }
   };
-  // Get users data
-  const getUsersData = async () => {
-    try {
-      const data = await getDocs(usersCollectionRef);
-      const usersList = data.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-      }));
-      console.log(usersList);
-    } catch (error) {
-      console.error(error);
+
+  const cancelSignUp = () => {
+    closeLogin();
+    if (setEditProfileMode) {
+      setEditProfileMode(false);
+      getUserData();
     }
-  };
-  const cancelSignUp = (e) => {
-    e.preventDefault();
-    setOverlay(false);
-    setSignup(false);
-    setEditProfileMode(false);
   };
 
   // Upload Profile image
   const uploadProfileImg = (file) => {
+    setUploadLoading(true);
     if (!file) return;
     const storageRef = ref(storage, `files/${file.name}`);
     const uploadTask = uploadBytesResumable(storageRef, file);
@@ -128,7 +156,7 @@ function SignUp({ editProfileMode, currentUserData, setEditProfileMode }) {
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           setImgUrl(downloadURL);
-          console.log(downloadURL);
+          setUploadLoading(false);
         });
       }
     );
@@ -143,12 +171,21 @@ function SignUp({ editProfileMode, currentUserData, setEditProfileMode }) {
           <IoCloseSharp onClick={cancelSignUp} className="close-icon" />
         )}
         <h3>{editProfileMode ? "Update Profile" : "Create Your Acount."}</h3>
-        <div className="profile-img">
+        <div className="profile-img position-relative">
+          <div
+            style={{
+              top: "18%",
+              display: uploadLoading ? "block" : "none",
+            }}
+            className="loading-c  position-absolute"
+          >
+            <div class="spinner-border" role="status"></div>
+          </div>
           <img
             alt="profile"
             src={
               imgUrl === null
-                ? "https://www.alleganyco.gov/wp-content/uploads/unknown-person-icon-Image-from.png"
+                ? "https://firebasestorage.googleapis.com/v0/b/study-swift-be3d8.appspot.com/o/files%2F2815428.png?alt=media&token=0e4e0bfc-5575-4358-baae-b8055ec2a61f"
                 : imgUrl
             }
             width={90}
@@ -194,14 +231,14 @@ function SignUp({ editProfileMode, currentUserData, setEditProfileMode }) {
               id="email"
             />
           </div>
-          {editProfileMode ? (
-            ""
-          ) : (
-            <div class="form-group">
-              <label for="Password">Password</label>
-              <input type="password" class="form-control" id="Password" />
-            </div>
-          )}
+
+          <div class="form-group">
+            <label for="Password">
+              {editProfileMode ? "New password" : "Password"}
+            </label>
+            <input type="password" class="form-control" id="Password" />
+          </div>
+
           <div class="form-group">
             <label for="birthday">Birthday</label>
             <input
@@ -216,6 +253,7 @@ function SignUp({ editProfileMode, currentUserData, setEditProfileMode }) {
             id="gender"
             class="form-select"
             aria-label="Default select example"
+            style={{ display: editProfileMode ? "none" : "block" }}
           >
             <option selected>Gender</option>
             <option value="male">Male</option>

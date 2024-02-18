@@ -17,19 +17,30 @@ import {
 import { auth, db } from "../config/firebase";
 import { MdDeleteOutline } from "react-icons/md";
 import TaskItem from "../components/TaskItem";
+import Empty from "../components/Empty";
 
 function Tasks() {
   const { setOverlay, overlay } = useContext(MyContext);
-  const [tasksList, setTasksList] = useState(null);
+  const [tasksList, setTasksList] = useState([]);
   const [taskDesc, setTaskDesc] = useState();
   const [taskTitle, SetTaskTitle] = useState();
   const [selectedTask, setSelectedTask] = useState(null);
   const [showTaskForm, setShowTaskForm] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const tasksCollectionRef = collection(db, "Tasks");
 
   useEffect(() => {
-    getTasks();
+    auth.onAuthStateChanged(function (user) {
+      if (user) {
+        getTasks();
+        // User is signed in.
+      } else {
+        console.log("Not Signed in");
+        setLoading(false);
+        // No user is signed in.
+      }
+    });
   }, []);
 
   /// Show create task window
@@ -78,7 +89,7 @@ function Tasks() {
     try {
       const q = query(
         tasksCollectionRef,
-        where("owner", "==", "7ogU1vyf0yee7vSuRCeZmFJC2AF2"),
+        where("owner", "==", auth?.currentUser?.uid),
         orderBy("creationDate", "desc")
       );
 
@@ -88,8 +99,8 @@ function Tasks() {
         ...doc.data(),
         id: doc.id,
       }));
-      console.log(List);
       setTasksList(List);
+      setLoading(false);
     } catch (error) {
       console.error(error);
     }
@@ -107,6 +118,8 @@ function Tasks() {
       console.error(error);
     }
   };
+
+  console.log("tasks", tasksList.length);
 
   ///////////////////////////
   /// Add tasks form
@@ -172,11 +185,13 @@ function Tasks() {
           <IoMdAdd className="icon" />
         </div>
       </div>
-      <div className="tasks-container">
-        {tasksList === null ? (
+      <div className="tasks-container h-100">
+        {loading ? (
           <div className="loading-c center">
             <div class="spinner-border" role="status"></div>
           </div>
+        ) : tasksList?.length === 0 ? (
+          <Empty />
         ) : (
           tasksList?.map((task) => {
             return (

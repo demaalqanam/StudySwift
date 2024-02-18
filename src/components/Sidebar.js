@@ -23,24 +23,34 @@ export const Sidebar = memo(() => {
   const { pathname } = useLocation();
 
   useEffect(() => {
+    activeClassCheck();
+  }, []);
+
+  /// Check Who's active
+  const activeClassCheck = () => {
     const cleanPathName = pathname.substring(1);
     links.map((l) => {
       l.current.classList.remove("active");
       if (l.current.innerText === cleanPathName) {
         l.current.classList.add("active");
+      } else if (pathname === "/") {
+        Link1.current.classList.add("active");
       }
     });
-  }, []);
+  };
 
+  const logoClick = () => {
+    links.map((l) => {
+      l.current.classList.remove("active");
+    });
+    Link1.current.classList.add("active");
+  };
   const handleIconAction = () => {
     setShowSettings((current) => (current === false ? true : false));
     seticonCkliked((current) => (current === false ? true : false));
   };
 
   const handleNavigation = (e) => {
-    // ref?.current?.children.map((item) => {
-    //   console.log(item.classList);
-    // });
     links.map((l) => {
       l.current.classList.remove("active");
     });
@@ -51,7 +61,9 @@ export const Sidebar = memo(() => {
       <div className=" sidebar " id={theme}>
         <div className="container">
           <div className="logo-b">
-            <img alt="logo" width={90} height={90} src={logo} />
+            <Link to="/" onClick={logoClick}>
+              <img alt="logo" width={90} height={90} src={logo} />
+            </Link>
           </div>
           <div className="side-cont">
             <div className="side-menu">
@@ -60,7 +72,7 @@ export const Sidebar = memo(() => {
                   <Link
                     ref={Link1}
                     onClick={(e) => handleNavigation(e)}
-                    className="active"
+                    className=""
                     to={"/"}
                   >
                     <FaHome className="icon" />
@@ -114,7 +126,11 @@ export const Sidebar = memo(() => {
               </ul>
             </div>
             <div className="settings-b">
-              {showSettings ? <SettingsWindow /> : ""}
+              {showSettings ? (
+                <SettingsWindow setShowSettings={setShowSettings} />
+              ) : (
+                ""
+              )}
               <div className="g-icon-c">
                 <FaGear
                   className={`g-icon ${iconCkliked ? "clicked" : ""}`}

@@ -28,31 +28,35 @@ import {
   where,
 } from "firebase/firestore";
 import { MyContext } from "../Context/Context";
+import { Link, redirect, useNavigate } from "react-router-dom";
 
 function Profile() {
   const usersRef = collection(db, "users");
   const [user, setUser] = useState();
   const { setOverlay, setSignup } = useContext(MyContext);
   const [editProfileMode, setEditProfileMode] = useState(false);
-
+  const [profileILoding, setProfileILodaing] = useState(false);
+  const navigate = useNavigate();
   /////////////////
   useEffect(() => {
-    auth.onAuthStateChanged(function (user) {
+    const unsubscribe = auth.onAuthStateChanged(function (user) {
       if (user) {
-        getUserData(user);
         // User is signed in.
-        setUser(user);
-        console.log("Signed in", user);
+        getUserData();
       } else {
-        console.log("Not Signed in");
-        // No user is signed in.
+        // No user is signed in redirect to home.
+        return navigate("/");
       }
     });
+
+    return () => {
+      // Unsubscribe from onAuthStateChanged listener when component unmounts
+      unsubscribe();
+    };
   }, []);
 
   /// Get user Data
   const getUserData = async () => {
-    console.log(auth.currentUser.email);
     try {
       const q = query(usersRef, where("Email", "==", auth.currentUser.email));
       const data = await getDocs(q);
@@ -61,6 +65,7 @@ function Profile() {
         id: doc.id,
       }));
       setUser(List[0]);
+      setProfileILodaing(false);
     } catch (error) {
       console.error(error);
     }
@@ -70,7 +75,6 @@ function Profile() {
   const showEdit = () => {
     setOverlay((current) => (current === false ? true : false));
     setEditProfileMode((current) => (current === false ? true : false));
-    // setSignup((current) => (current === false ? true : false));
   };
 
   return (
@@ -80,6 +84,8 @@ function Profile() {
           editProfileMode={true}
           setEditProfileMode={setEditProfileMode}
           currentUserData={user}
+          getUserData={getUserData}
+          setProfileILodaing={setProfileILodaing}
         />
       ) : (
         ""
@@ -87,37 +93,54 @@ function Profile() {
       <div className="profile">
         <MDBRow className="justify-content-center align-items-center h-100">
           <MDBCol lg="6" className="mb-4 h-100 w-100 mb-lg-0">
-            {user === null ? (
-              <div className="loading-c center">
-                <div class="spinner-border" role="status"></div>
-              </div>
-            ) : (
-              <MDBCard className="mb-3 h-100" style={{ borderRadius: ".5rem" }}>
-                <MDBRow className="g-0 h-100">
-                  <MDBCol
-                    md="4"
-                    className="gradient-custom text-center h-100 text-white"
+            <MDBCard
+              className="mb-3  position-relative h-100"
+              style={{ borderRadius: ".5rem" }}
+            >
+              <Link to="/" className="back-btn position-absolute">
+                Back to home
+              </Link>
+              <MDBRow className="g-0 h-100">
+                <MDBCol
+                  md="4"
+                  className="gradient-custom position-relative text-center h-100 text-white"
+                  style={{
+                    borderTopLeftRadius: ".5rem",
+                    borderBottomLeftRadius: ".5rem",
+                  }}
+                >
+                  <MDBCardImage
+                    src={
+                      user?.profileImg === null
+                        ? "https://www.alleganyco.gov/wp-content/uploads/unknown-person-icon-Image-from.png"
+                        : user?.profileImg
+                    }
+                    alt="Avatar"
+                    className="my-5"
                     style={{
-                      borderTopLeftRadius: ".5rem",
-                      borderBottomLeftRadius: ".5rem",
+                      width: "80px",
+                      height: "80px",
+                      borderRadius: "50%",
                     }}
-                  >
-                    <MDBCardImage
-                      src={
-                        user?.profileImg === null
-                          ? "https://www.alleganyco.gov/wp-content/uploads/unknown-person-icon-Image-from.png"
-                          : user?.profileImg
-                      }
-                      alt="Avatar"
-                      className="my-5"
-                      style={{ width: "80px", borderRadius: "50%" }}
-                      fluid
-                    />
-                    <MDBTypography tag="h5">{user?.fullName}</MDBTypography>
-                    <MDBCardText>Student</MDBCardText>
-                    <MDBIcon far icon="edit mb-5" />
-                  </MDBCol>
-                  <MDBCol md="8">
+                    fluid
+                  />
+                  {profileILoding ? (
+                    <div className="loading-c p-img">
+                      <div class="spinner-border" role="status"></div>
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                  <MDBTypography tag="h5">{user?.fullName}</MDBTypography>
+                  <MDBCardText>Student</MDBCardText>
+                  <MDBIcon far icon="edit mb-5" />
+                </MDBCol>
+                <MDBCol md="8">
+                  {user === undefined ? (
+                    <div className="loading-c h-100 center">
+                      <div class="spinner-border" role="status"></div>
+                    </div>
+                  ) : (
                     <MDBCardBody className="p-4">
                       <MDBTypography tag="h6">Information</MDBTypography>
                       <hr className="mt-0 mb-4" />
@@ -175,10 +198,10 @@ function Profile() {
                         </MDBCol>
                       </MDBRow>
                     </MDBCardBody>
-                  </MDBCol>
-                </MDBRow>
-              </MDBCard>
-            )}
+                  )}
+                </MDBCol>
+              </MDBRow>
+            </MDBCard>
           </MDBCol>
         </MDBRow>
       </div>

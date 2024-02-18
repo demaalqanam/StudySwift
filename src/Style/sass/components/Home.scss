@@ -34,12 +34,34 @@
     }
   }
 }
+
+.footer {
+  position: absolute;
+  background: #fff;
+  width: 60%;
+  height: 40px;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-40%);
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  opacity: 0.9;
+
+  p {
+    font-weight: 400;
+    font-size: 14px;
+    color: $text_dark_color;
+    margin: 0 8px !important;
+  }
+}
 // Dark theme styling
-#light .info-block {
+#light .info-block,
+#light .footer {
   background-color: $first_light_BG;
   color: $dark-primary-color;
 }
-#dark .info-block {
+#dark .info-block,
+.footer {
   background-color: $secondary-dark-color;
   color: $text-white;
 }
@@ -48,4 +70,7 @@
 }
 #light .icon {
   color: $text_dark_color;
+}
+#dark .footer p {
+  color: $text-white;
 }

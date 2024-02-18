@@ -3,37 +3,47 @@ import { MyContext } from "../Context/Context";
 import { auth } from "../config/firebase";
 
 function WelcomePage() {
-  const { theme, setTheme } = useContext(MyContext);
+  const { theme } = useContext(MyContext);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      setUser(user);
-      setLoading(false);
-    });
+    const unsubscribe = auth.onAuthStateChanged(
+      (user) => {
+        setUser(user);
+        setLoading(false);
+      },
+      (error) => {
+        // Handle any errors here
+        console.error("Error in onAuthStateChanged:", error);
+      }
+    );
+
     return () => {
-      unsubscribe(); // Unsubscribe from the onAuthStateChanged listener when component unmounts
+      // Unsubscribe from onAuthStateChanged listener when component unmounts
+      unsubscribe();
     };
   }, []);
 
   if (loading) {
-    return;
+    return <div>Loading...</div>; // Show a loading indicator while checking authentication status
   }
+
+  console.log(user);
+
   return (
-    <div className="landing-info" id={theme}>
+    <div className="landing-info">
       <div className="info-block">
         <h2>
-          {" "}
-          {user !== null
-            ? `Welcome ${user?.displayName}`
+          {user !== null && user.displayName
+            ? `Welcome ${user.displayName}`
             : "Welcome to StudySwift."}
         </h2>
         <div className="info">
-          <h4>Where you can be more produvtive.</h4>
+          <h4>Where you can be more productive.</h4>
           <p>
             A platform to help you to study in an organized and effective way,
-            where you can set goals and achive them, play sessions with music
+            where you can set goals and achieve them, play sessions with music,
             and set your daily tasks.
           </p>
         </div>

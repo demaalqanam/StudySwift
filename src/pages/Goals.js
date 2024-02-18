@@ -15,6 +15,7 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
+import Empty from "../components/Empty";
 
 function Goals() {
   const [showWindow, setShowWindow] = useState(false);
@@ -22,14 +23,24 @@ function Goals() {
   const [goalsList, setGoalsList] = useState(null);
   const [goalDesc, setGoalDesc] = useState();
   const [goalTitle, SetGoalTitle] = useState();
-  const [goalDuration, SetGoalDuration] = useState();
+  const [goalDurationInHour, SetGoalDurationInHour] = useState();
   const [selectedGoal, setSelectedGoal] = useState(null);
   const [areYouSureWindow, setAreYouSureW] = useState(false);
   const [goalDeadline, setGoalDeadline] = useState();
+  const [loading, setLoading] = useState(true);
   const goalsCollectionRef = collection(db, "Gooals");
 
   useEffect(() => {
-    getGoals();
+    auth.onAuthStateChanged(function (user) {
+      if (user) {
+        getGoals();
+        // User is signed in.
+      } else {
+        console.log("Not Signed in");
+        setLoading(false);
+        // No user is signed in.
+      }
+    });
   }, []);
 
   /// Show add window
@@ -44,7 +55,7 @@ function Goals() {
     try {
       const q = query(
         goalsCollectionRef,
-        where("owner", "==", auth.currentUser.uid)
+        where("owner", "==", auth?.currentUser?.uid)
       );
       const data = await getDocs(q);
       const List = data.docs.map((doc) => ({
@@ -52,6 +63,7 @@ function Goals() {
         id: doc.id,
       }));
       setGoalsList(List);
+      setLoading(false);
     } catch (error) {
       console.error(error);
     }
@@ -73,9 +85,8 @@ function Goals() {
     let dateString = currentDate.toLocaleString("en-US", options);
 
     /// Hours To minutes
-    let minutes = goalDuration * 60;
-    /// To seconds
-    let seconds = minutes * 60;
+    let minutes = goalDurationInHour * 60;
+
     if (selectedGoal === null) {
       //// Creation
       try {
@@ -85,7 +96,8 @@ function Goals() {
           deadline: goalDeadline,
           creationDate: dateString,
           owner: auth.currentUser.uid,
-          studyDuration: seconds,
+          goalInMin: minutes,
+          goalInHour: goalDurationInHour,
           cheked: false,
           progress: 0,
         }).then((res) => {
@@ -109,17 +121,20 @@ function Goals() {
     setGoalDeadline(goal?.deadline);
     setGoalDesc(goal?.description);
     SetGoalTitle(goal?.title);
-    SetGoalDuration(goal?.studyDuration);
+    SetGoalDurationInHour(goal?.goalInHour);
   };
 
   ///// Handle submit Edit action
   const updateGoal = async () => {
+    /// Hours To minutes
+    let minutes = goalDurationInHour * 60;
     const goalDoc = doc(db, "Gooals", selectedGoal.id);
     await updateDoc(goalDoc, {
       title: goalTitle,
       description: goalDesc,
       deadline: goalDeadline,
-      studyDuration: goalDuration,
+      goalInMin: minutes,
+      goalInHour: goalDurationInHour,
     })
       .then((res) => {
         console.log(res);
@@ -135,7 +150,7 @@ function Goals() {
     setGoalDeadline("");
     setGoalDesc("");
     SetGoalTitle("");
-    SetGoalDuration();
+    SetGoalDurationInHour();
     setSelectedGoal(null);
   };
 
@@ -154,9 +169,6 @@ function Goals() {
       console.error(error);
     }
   };
-
-  ///calculate progress ///
-  const calculateProgress = () => {};
 
   ///////////////////////
   // Edit and add form //
@@ -191,8 +203,8 @@ function Goals() {
               type="number"
               class="form-control"
               id="duration"
-              value={goalDuration}
-              onChange={(e) => SetGoalDuration(e.target.value)}
+              value={goalDurationInHour}
+              onChange={(e) => SetGoalDurationInHour(e.target.value)}
             />
           </div>
 
@@ -244,12 +256,7 @@ function Goals() {
     );
   };
 
-  const secondsToHours = (goal) => {
-    let seconds = goal?.studyDuration;
-    let hours = seconds / 3600;
-
-    return hours;
-  };
+  console.log(goalsList);
 
   return (
     <>
@@ -260,80 +267,85 @@ function Goals() {
           <div className="title">
             <h3>Your Goals</h3>
           </div>
-          <button onClick={handleAddWindow} className="btn center">
+          <button
+            disabled={auth.currentUser === null}
+            onClick={handleAddWindow}
+            className="btn center"
+          >
             Set a goal <IoMdAdd className="icon" />
           </button>
         </div>
 
         <div className="golas-cont">
-          {goalsList === null ? (
+          {/* {goalsList == null ? <Empty /> : ""} */}
+          {loading ? (
             <div className="loading-c center">
               <div class="spinner-border" role="status"></div>
             </div>
+          ) : goalsList?.length === 0 || goalsList === null ? (
+            <Empty />
           ) : (
-            ""
+            goalsList?.map((goal, index) => {
+              return (
+                <div className="goal-item">
+                  <div className="g-check">
+                    {goal?.cheked ? (
+                      <>
+                        {" "}
+                        <FaCheck className="check-i" />
+                        <p>Goal Reached</p>
+                      </>
+                    ) : (
+                      ""
+                    )}
+                  </div>
+                  <div className="goal-header">
+                    <div className="icons">
+                      <h4 className="center">{index + 1}</h4>
+                      <FaRegEdit
+                        onClick={() => showEdit(goal)}
+                        className="icon"
+                      />
+                      <IoClose
+                        onClick={() => {
+                          setAreYouSureW(true);
+                          setOverlay(true);
+                          setSelectedGoal(goal);
+                        }}
+                        className="icon"
+                      />
+                    </div>
+                    <div className="goal-title">
+                      <h3>{goal?.title}</h3>
+                    </div>
+                  </div>
+                  <div className="g-middle">
+                    <p>{goal?.description}</p>
+                    <div className="goal-dates">
+                      <div className="dates">
+                        <p>Creation date:</p> <p>{goal?.creationDate}</p>
+                      </div>
+                      <div className="dates">
+                        <p>Deadline:</p> <p>{goal?.deadline}</p>
+                      </div>
+                      <div className="dates">
+                        <p>Study duration:</p> <p>{goal.goalInHour} (Hours)</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="g-progress">
+                    <div className="p-parent">
+                      <span
+                        style={{ width: `${goal?.progress}%` }}
+                        className="p-child"
+                      ></span>
+                    </div>
+                    <div className="p-number">{goal?.progress}%/100</div>
+                  </div>
+                </div>
+              );
+            })
           )}
-          {goalsList?.map((goal, index) => {
-            return (
-              <div className="goal-item">
-                <div className="g-check">
-                  {goal?.cheked ? (
-                    <>
-                      {" "}
-                      <FaCheck className="check-i" />
-                      <p>Goal Reached</p>
-                    </>
-                  ) : (
-                    ""
-                  )}
-                </div>
-                <div className="goal-header">
-                  <div className="icons">
-                    <h4 className="center">{index + 1}</h4>
-                    <FaRegEdit
-                      onClick={() => showEdit(goal)}
-                      className="icon"
-                    />
-                    <IoClose
-                      onClick={() => {
-                        setAreYouSureW(true);
-                        setOverlay(true);
-                        setSelectedGoal(goal);
-                      }}
-                      className="icon"
-                    />
-                  </div>
-                  <div className="goal-title">
-                    <h3>{goal?.title}</h3>
-                  </div>
-                </div>
-                <div className="g-middle">
-                  <p>{goal?.description}</p>
-                  <div className="goal-dates">
-                    <div className="dates">
-                      <p>Creation date:</p> <p>{goal?.creationDate}</p>
-                    </div>
-                    <div className="dates">
-                      <p>Deadline:</p> <p>{goal?.deadline}</p>
-                    </div>
-                    <div className="dates">
-                      <p>Study duration:</p>{" "}
-                      <p>{secondsToHours(goal)} (Hours)</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="g-progress">
-                  <div className="p-parent">
-                    <span
-                      style={{ width: `${goal?.progress}%` }}
-                      className="p-child"
-                    ></span>
-                  </div>
-                  <div className="p-number">{goal?.progress}/100</div>
-                </div>
-              </div>
-            );
-          })}
         </div>
       </div>
     </>

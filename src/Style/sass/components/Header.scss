@@ -60,17 +60,17 @@
     margin: 0 40px;
     .btn {
       font-weight: 600;
-      padding: 4px 12px;
       border-radius: 4px;
-      text-align: center;
-      font-size: 16px;
+      font-size: 15px;
+      width: auto;
+      max-height: 40px;
       &.signin-b {
         color: $text-white;
+        margin-left: 10px;
         background-color: $secondary-color;
       }
       &.signup-b {
         border: 1px solid $text-dark-min;
-        color: inherit;
       }
     }
   }
@@ -89,9 +89,11 @@
     color: $first_light_BG;
 
     h4 {
-      margin: 0 0 0 10px;
+      width: 60%;
+      text-align: center;
       font-weight: 600;
-      font-size: 17px;
+      font-size: 15px;
+      margin: 0;
       color: $text-white;
     }
 
@@ -120,6 +122,9 @@
 }
 #dark .header .logout-window .options .btn {
   background-color: $secondary-color;
+  color: $text-white;
+}
+#dark .signin-buttons .btn.signup-b {
   color: $text-white;
 }
 #light .header .logout-window .options {

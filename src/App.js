@@ -23,6 +23,7 @@ import Tasks from "./pages/Tasks";
 import Sessions from "./components/Sessions";
 import FAQ from "./pages/FAQ";
 import Profile from "./pages/Profile";
+import Footer from "./components/Footer";
 
 const backgrounds = [
   {
@@ -42,18 +43,34 @@ const backgrounds = [
   },
 ];
 function App() {
-  const [theme, setTheme] = useState("light");
+  const [theme, setTheme] = useState("dark");
   const [overlay, setOverlay] = useState(false);
   const [login, setLogin] = useState(false);
   const [Signup, setSignup] = useState(false);
   const [count, setCount] = useState(0);
-  const [currentBGIndex, setCurrentGBIndex] = useState(0);
+  const [currentBGIndex, setCurrentGBIndex] = useState(2);
   const [showTimer, setShowTimer] = useState(true);
   const [showMusicPlayer, setShowMusicPlayer] = useState(true);
   const [showBGChanger, setShowBGChanger] = useState(true);
 
   const handleRerender = () => {
     setCount(count + 1);
+  };
+
+  // Show login and sign up actions
+  const showLogin = () => {
+    setOverlay((current) => (current === false ? true : false));
+    setLogin((current) => (current === false ? true : false));
+  };
+  const showSignUp = () => {
+    setOverlay((current) => (current === false ? true : false));
+    setSignup((current) => (current === false ? true : false));
+  };
+
+  const closeLogin = () => {
+    setOverlay(false);
+    setLogin(false);
+    setSignup(false);
   };
 
   useEffect(() => {}, []);
@@ -82,8 +99,9 @@ function App() {
         setOverlay,
         login,
         Signup,
-        setLogin,
-        setSignup,
+        showLogin,
+        showSignUp,
+        closeLogin,
         handleRerender,
         changeBGForward,
         changeBGBackward,
@@ -119,6 +137,7 @@ function App() {
               <Route path="/Profile" element={<Profile />} />
             </Routes>
           </div>
+          <Footer />
           {login ? <SignIn /> : ""}
           {Signup ? <SignUp /> : ""}
         </div>

@@ -17,12 +17,15 @@
     border-bottom: 1px solid $border_dark_color;
 
     .h-btn {
-      background-color: $primary-color;
+      background-color: $secondary-color;
       height: 34px;
       border-radius: 6px;
       color: $text-white;
       button {
         color: $text-white;
+      }
+      svg {
+        color: $text-white !important;
       }
     }
   }
