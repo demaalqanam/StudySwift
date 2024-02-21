@@ -35,6 +35,8 @@
     flex-direction: column;
     gap: 10px;
     margin-top: 20px;
+    height: 90%;
+    overflow-y: scroll;
     .task-item {
       border-radius: 6px;
       padding: 10px;
@@ -45,6 +47,9 @@
         padding: 5px 10px;
         justify-content: space-between;
 
+        h3 {
+          font-size: 20px;
+        }
         .i-icon svg {
           width: 20px;
           height: 20px;
@@ -90,7 +95,7 @@
     padding: 15px;
 
     .form-btns {
-      margin-top: 10px;
+      margin-top: 10px !important;
       display: flex;
       .btn {
         height: 32px;
@@ -113,6 +118,9 @@
 #dark .tasks {
   background-color: $secondary-dark-color;
   color: $text-white;
+}
+#dark .task-form {
+  background-color: $dark-primary-color;
 }
 #dark .task-item {
   background-color: $dark-primary-color;

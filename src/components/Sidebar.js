@@ -8,9 +8,10 @@ import { FaGear } from "react-icons/fa6";
 import SettingsWindow from "./SettingsWindow";
 import { MyContext } from "../Context/Context";
 import { Link, useLocation } from "react-router-dom";
+import { auth } from "../config/firebase";
 
 export const Sidebar = memo(() => {
-  const { theme, setTheme } = useContext(MyContext);
+  const { theme, isAdmin } = useContext(MyContext);
   const [showSettings, setShowSettings] = useState(false);
   const [iconCkliked, seticonCkliked] = useState(false);
   const Link1 = useRef();
@@ -30,20 +31,20 @@ export const Sidebar = memo(() => {
   const activeClassCheck = () => {
     const cleanPathName = pathname.substring(1);
     links.map((l) => {
-      l.current.classList.remove("active");
-      if (l.current.innerText === cleanPathName) {
-        l.current.classList.add("active");
+      l.current?.classList.remove("active");
+      if (l.current?.innerText === cleanPathName) {
+        l.current?.classList.add("active");
       } else if (pathname === "/") {
-        Link1.current.classList.add("active");
+        Link1.current?.classList.add("active");
       }
     });
   };
 
   const logoClick = () => {
     links.map((l) => {
-      l.current.classList.remove("active");
+      l.current?.classList.remove("active");
     });
-    Link1.current.classList.add("active");
+    Link1.current?.classList.add("active");
   };
   const handleIconAction = () => {
     setShowSettings((current) => (current === false ? true : false));
@@ -52,10 +53,11 @@ export const Sidebar = memo(() => {
 
   const handleNavigation = (e) => {
     links.map((l) => {
-      l.current.classList.remove("active");
+      l.current?.classList.remove("active");
     });
-    e.target.classList.add("active");
+    e.target?.classList.add("active");
   };
+
   return (
     <>
       <div className=" sidebar " id={theme}>
@@ -67,63 +69,98 @@ export const Sidebar = memo(() => {
           </div>
           <div className="side-cont">
             <div className="side-menu">
-              <ul>
-                <li className="">
-                  <Link
-                    ref={Link1}
-                    onClick={(e) => handleNavigation(e)}
-                    className=""
-                    to={"/"}
-                  >
-                    <FaHome className="icon" />
-                    Home
-                  </Link>
-                </li>
-                <li className=" ">
-                  <Link
-                    className=""
-                    onClick={(e) => handleNavigation(e)}
-                    to={"/Goals"}
-                    ref={Link2}
-                  >
-                    <GoGoal className="icon" />
-                    Goals
-                  </Link>
-                </li>
-                <li className=" ">
-                  <Link
-                    className=""
-                    onClick={(e) => handleNavigation(e)}
-                    ref={Link3}
-                    to={"/Tasks"}
-                  >
-                    <FaTasks className="icon" />
-                    Tasks
-                  </Link>
-                </li>
-                <li className=" ">
-                  <Link
-                    className=""
-                    onClick={(e) => handleNavigation(e)}
-                    ref={Link4}
-                    to={"/Sessions"}
-                  >
-                    <IoPlayForward className="icon" />
-                    Sessions
-                  </Link>
-                </li>
-                <li className=" ">
-                  <Link
-                    className=""
-                    onClick={(e) => handleNavigation(e)}
-                    ref={Link5}
-                    to={"/Faq"}
-                  >
-                    <FaQuestionCircle className="icon" />
-                    FAQ
-                  </Link>
-                </li>
-              </ul>
+              {isAdmin ? (
+                <ul>
+                  <li className="">
+                    <Link
+                      ref={Link1}
+                      onClick={(e) => handleNavigation(e)}
+                      className=" active"
+                      to={"/"}
+                    >
+                      Home
+                    </Link>
+                  </li>
+                  <li className="">
+                    <Link
+                      ref={Link2}
+                      onClick={(e) => handleNavigation(e)}
+                      className=" "
+                      to={"/Students"}
+                    >
+                      Manage Users
+                    </Link>
+                  </li>
+                  <li className=" ">
+                    <Link
+                      className=""
+                      onClick={(e) => handleNavigation(e)}
+                      to={"/Faq"}
+                      ref={Link3}
+                    >
+                      Manage FAQs
+                    </Link>
+                  </li>
+                </ul>
+              ) : (
+                <ul>
+                  <li className="">
+                    <Link
+                      ref={Link1}
+                      onClick={(e) => handleNavigation(e)}
+                      className=""
+                      to={"/"}
+                    >
+                      <FaHome className="icon" />
+                      Home
+                    </Link>
+                  </li>
+                  <li className=" ">
+                    <Link
+                      className=""
+                      onClick={(e) => handleNavigation(e)}
+                      to={"/Goals"}
+                      ref={Link2}
+                    >
+                      <GoGoal className="icon" />
+                      Goals
+                    </Link>
+                  </li>
+                  <li className=" ">
+                    <Link
+                      className=""
+                      onClick={(e) => handleNavigation(e)}
+                      ref={Link3}
+                      to={"/Tasks"}
+                    >
+                      <FaTasks className="icon" />
+                      Tasks
+                    </Link>
+                  </li>
+                  <li className=" ">
+                    <Link
+                      className=""
+                      onClick={(e) => handleNavigation(e)}
+                      ref={Link4}
+                      to={"/Sessions"}
+                    >
+                      <IoPlayForward className="icon" />
+                      Sessions
+                    </Link>
+                  </li>
+                  <li className=" ">
+                    <Link
+                      className=""
+                      onClick={(e) => handleNavigation(e)}
+                      ref={Link5}
+                      to={"/Faq"}
+                    >
+                      <FaQuestionCircle className="icon" />
+                      FAQ
+                    </Link>
+                  </li>
+                </ul>
+              )}
             </div>
             <div className="settings-b">
               {showSettings ? (

@@ -49,6 +49,10 @@
   .delete {
     margin-top: 10px;
     background-color: $second_light_BG;
+    &:hover {
+      background-color: $second_light_BG;
+      color: $text_dark_color;
+    }
   }
 }
 .goals {

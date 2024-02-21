@@ -34,7 +34,7 @@ function Sessions() {
     setShowBGChanger,
   } = useContext(MyContext);
 
-  const [choosedTime, setChoosedTime] = useState(25);
+  const [choosedTime, setChoosedTime] = useState(0);
   const [currentTime, setCurrentTime] = useState(1500);
   const [goalsList, setGoalsList] = useState([]);
   const [selectedGoal, setSelectedGoal] = useState();
@@ -43,7 +43,9 @@ function Sessions() {
   const btn1 = useRef();
   const btn2 = useRef();
 
-  time.setSeconds(time.getSeconds() + Number(choosedTime)); // 10 minutes timer
+  time.setSeconds(
+    time.getSeconds() + Number(choosedTime === 0 ? 1500 : choosedTime)
+  ); // 10 minutes timer
   const goalsCollectionRef = collection(db, "Gooals");
   const {
     totalSeconds,
@@ -117,17 +119,18 @@ function Sessions() {
     }
   };
 
-  /////// Update the goal
+  /////// Update the goal progress and state
   const handleUpdateGoal = async () => {
     if (selectedGoal) {
-      let goal = selectedGoal?.split(","); /// this returns undeifind
+      let goal = selectedGoal?.split(",");
       const goalDoc = doc(db, "Gooals", goal[0]);
       const newProgress = calculateProgress(goal[1]);
       const oldProgress = Number(goal[2]);
       let calculatedProgress = oldProgress + Number(newProgress.toFixed(1));
-
+      let fixedNumber = calculatedProgress.toFixed(1);
       await updateDoc(goalDoc, {
-        progress: calculatedProgress,
+        progress: fixedNumber,
+        cheked: Number(fixedNumber) >= 100 ? true : false,
       })
         .then((res) => {})
         .catch((err) => console.error(err));
@@ -138,8 +141,6 @@ function Sessions() {
   const calculateProgress = (goalDuration) => {
     // Calculate percentage
     let percentage = (Number(choosedTime) / Number(goalDuration)) * 100;
-
-    console.log("Percentage of goal achieved: " + percentage + "%");
     return percentage;
   };
 

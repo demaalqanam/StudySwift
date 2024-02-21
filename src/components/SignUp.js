@@ -113,6 +113,8 @@ function SignUp({
               profileImg: imgUrl,
               birthDate: birthDate,
               role: "Student",
+              disabled: false,
+              authUID: auth.currentUser.uid,
             }).then((res) => {
               handleRerender();
             });

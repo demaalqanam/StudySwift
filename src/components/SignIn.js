@@ -4,14 +4,23 @@ import { IoCloseSharp } from "react-icons/io5";
 import { MyContext } from "../Context/Context";
 import { auth, db, googleProvider } from "../config/firebase";
 import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
-import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  documentId,
+  getDoc,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
 
 function SignIn() {
   const { closeLogin, handleRerender } = useContext(MyContext);
   const [loginWithEmail, setLoginWithEmail] = useState(false);
   const usersCollectionRef = collection(db, "users");
   const [usernInEmail, setUserInEmail] = useState();
-  const [isError, setIsError] = useState(false);
+  const [isError, setIsError] = useState({ is: false, message: "" });
 
   // login with google account
   const signInWithGoogle = async () => {
@@ -69,7 +78,7 @@ function SignIn() {
         <h3>Continue To StudySwift</h3>
 
         {loginWithEmail ? (
-          LogIn(closeLogin, isError, setIsError, handleRerender)
+          LogIn(closeLogin, isError, setIsError, usersCollectionRef)
         ) : (
           <div className="options">
             <div className="options-cont">
@@ -92,31 +101,43 @@ function SignIn() {
 
 export default SignIn;
 
-function LogIn(closeLogin, isError, setIsError, handleRerender) {
+function LogIn(closeLogin, isError, setIsError, usersCollectionRef) {
   // Login Action
-  const onLogin = (e) => {
+  const onLogin = async (e) => {
     e.preventDefault();
     const email = e.target.email.value;
     const password = e.target.Password.value;
 
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        // Signed in
-        const user = {
-          displayName: userCredential.user.displayName,
-          photo: userCredential.user.photoURL,
-        };
-        localStorage.setItem("uid", user.toString());
-        console.log(user);
-        closeLogin();
-        // handleRerender();
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorCode, errorMessage);
-        setIsError(true);
-      });
+    /// Check if the user active or disabled
+    const q = query(usersCollectionRef, where("Email", "==", email));
+    const data = await getDocs(q);
+    const user = data.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }))[0];
+    console.log(user);
+    if (user?.disabled) {
+      console.log("User is Blocked");
+      setIsError({ is: true, message: "User is blocked!" });
+    } else {
+      // Signed in
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          const user = {
+            displayName: userCredential.user.displayName,
+            photo: userCredential.user.photoURL,
+          };
+          localStorage.setItem("uid", user.toString());
+          console.log(user);
+          closeLogin();
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log(errorCode, errorMessage);
+          setIsError({ is: true, message: "Wrong email or password!" });
+        });
+    }
   };
   return (
     <div className="login">
@@ -131,9 +152,9 @@ function LogIn(closeLogin, isError, setIsError, handleRerender) {
         </div>
         <small
           style={{ color: "red" }}
-          className={isError ? "d-block" : "d-none"}
+          className={isError.is ? "d-block" : "d-none"}
         >
-          Wrong email or password!
+          {isError.message}
         </small>
         <div className="login-btns">
           <button type="submit" class="btn login-btn">

@@ -256,8 +256,6 @@ function Goals() {
     );
   };
 
-  console.log(goalsList);
-
   return (
     <>
       {showWindow ? GoalForm() : ""}

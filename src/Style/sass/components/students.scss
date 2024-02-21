@@ -1,0 +1,80 @@
+// Import Vaiables //
+@use "../variables/index.scss" as *;
+
+.students {
+  width: 100%;
+  height: 90%;
+  position: relative;
+  background-color: $first_light_BG;
+  border-radius: 6px;
+  margin-top: 80px;
+
+  > .row {
+    margin: 0 !important;
+  }
+  .s-header {
+    h3 {
+      border-bottom: 1px solid $border_light_color;
+    }
+  }
+  .s-body {
+    width: 100%;
+    padding: 20px;
+    max-height: 90vh;
+    .cards-list {
+      display: flex;
+      overflow: hidden;
+      overflow-y: scroll;
+      flex-wrap: wrap;
+      height: 600px;
+      gap: 10px;
+      .card {
+        width: 280px;
+        height: 490px;
+        .card-body .m-options {
+          display: flex;
+          gap: 10px;
+          margin-bottom: 10px;
+        }
+        .view-cascade {
+          height: 240px;
+          width: 240px;
+          overflow: hidden;
+        }
+        p {
+          font-size: 14px;
+        }
+
+        .btn {
+          background-color: $secondary-color;
+          margin-top: 12px;
+          border-radius: 4px !important;
+          color: $text-white;
+          padding: 4px 8px !important;
+          font-weight: 600;
+        }
+      }
+    }
+  }
+}
+
+// Dark theme Styling
+#light .students {
+  background-color: $first_light_BG;
+  color: $text-dark-min;
+}
+#dark .students {
+  background-color: $secondary-dark-color;
+  color: $text-white;
+}
+#dark .card-footer:last-child {
+  color: $text-white !important;
+}
+#dark .students .card {
+  background-color: $dark-primary-color;
+  color: $text-white;
+}
+
+#dark .students .s-header h3 {
+  border-bottom: 1px solid $border_dark_color;
+}

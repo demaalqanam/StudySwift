@@ -8,6 +8,7 @@ import "./Style/sass/components/sessions.scss";
 import "./Style/sass/components/stopWatch.scss";
 import "./Style/sass/components/profile.scss";
 import "./Style/sass/components/FAQ.scss";
+import "./Style/sass/components/students.scss";
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import { Home } from "./pages/Home";
 import { Sidebar } from "./components/Sidebar";
@@ -24,6 +25,8 @@ import Sessions from "./components/Sessions";
 import FAQ from "./pages/FAQ";
 import Profile from "./pages/Profile";
 import Footer from "./components/Footer";
+import Students from "./pages/Students";
+import { auth } from "./config/firebase";
 
 const backgrounds = [
   {
@@ -52,9 +55,31 @@ function App() {
   const [showTimer, setShowTimer] = useState(true);
   const [showMusicPlayer, setShowMusicPlayer] = useState(true);
   const [showBGChanger, setShowBGChanger] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const handleRerender = () => {
     setCount(count + 1);
+  };
+  useEffect(() => {
+    checkMode();
+    /// Check if current user is admin
+    const unsubscribe = auth.onAuthStateChanged(function (user) {
+      if (user?.uid === "X8xcmQadPfXbmL2OWXyg8dDQjSD3") {
+        setIsAdmin(true);
+      } else {
+        setIsAdmin(false);
+      }
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+  /// Check the mode
+  const checkMode = () => {
+    const modeInStorage = localStorage.getItem("mode");
+    setTheme(modeInStorage);
   };
 
   // Show login and sign up actions
@@ -112,6 +137,7 @@ function App() {
         setShowMusicPlayer,
         showBGChanger,
         setShowBGChanger,
+        isAdmin,
       }}
     >
       <Router>
@@ -135,6 +161,7 @@ function App() {
               <Route path="/Sessions" element={<Sessions />} />
               <Route path="/FAQ" element={<FAQ />} />
               <Route path="/Profile" element={<Profile />} />
+              <Route path="/Students" element={<Students />} />
             </Routes>
           </div>
           <Footer />

@@ -9,6 +9,7 @@ import { signOut } from "firebase/auth";
 
 function SettingsWindow({ setShowSettings }) {
   const { theme, setTheme, handleRerender, showLogin } = useContext(MyContext);
+
   auth.onAuthStateChanged(function (user) {
     if (user) {
       console.log(" Signed in");
@@ -22,6 +23,8 @@ function SettingsWindow({ setShowSettings }) {
 
   const toggleTheme = () => {
     setTheme((current) => (current === "light" ? "dark" : "light"));
+    let nextMode = theme === "dark" ? "light" : "dark";
+    localStorage.setItem("mode", nextMode);
   };
 
   // Logout action

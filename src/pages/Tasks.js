@@ -77,6 +77,8 @@ function Tasks() {
         }).then((res) => {
           showCreateWindow();
           getTasks();
+          SetTaskTitle("");
+          setTaskDesc("");
         });
       } catch (error) {
         console.error(error);
@@ -118,8 +120,6 @@ function Tasks() {
       console.error(error);
     }
   };
-
-  console.log("tasks", tasksList.length);
 
   ///////////////////////////
   /// Add tasks form
@@ -185,7 +185,7 @@ function Tasks() {
           <IoMdAdd className="icon" />
         </div>
       </div>
-      <div className="tasks-container h-100">
+      <div className="tasks-container ">
         {loading ? (
           <div className="loading-c center">
             <div class="spinner-border" role="status"></div>

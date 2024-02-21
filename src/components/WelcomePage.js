@@ -3,7 +3,7 @@ import { MyContext } from "../Context/Context";
 import { auth } from "../config/firebase";
 
 function WelcomePage() {
-  const { theme } = useContext(MyContext);
+  const { isAdmin } = useContext(MyContext);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -14,13 +14,10 @@ function WelcomePage() {
         setLoading(false);
       },
       (error) => {
-        // Handle any errors here
         console.error("Error in onAuthStateChanged:", error);
       }
     );
-
     return () => {
-      // Unsubscribe from onAuthStateChanged listener when component unmounts
       unsubscribe();
     };
   }, []);
@@ -36,16 +33,28 @@ function WelcomePage() {
       <div className="info-block">
         <h2>
           {user !== null && user.displayName
-            ? `Welcome ${user.displayName}`
+            ? `Welcome ${isAdmin ? "Admin" : ""} ${user.displayName}`
             : "Welcome to StudySwift."}
         </h2>
         <div className="info">
-          <h4>Where you can be more productive.</h4>
-          <p>
-            A platform to help you to study in an organized and effective way,
-            where you can set goals and achieve them, play sessions with music,
-            and set your daily tasks.
-          </p>
+          {isAdmin ? (
+            <h4>Manage Students accounts and FAQs.</h4>
+          ) : (
+            <h4>Where you can be more productive.</h4>
+          )}
+          {isAdmin ? (
+            <p>
+              You're an admin in StydySwift you can edit, delete and block
+              studnets accounts and all FAQs data ordinary stuents accounts have
+              no access to these data and functions.
+            </p>
+          ) : (
+            <p>
+              A platform to help you to study in an organized and effective way,
+              where you can set goals and achieve them, play sessions with
+              music, and set your daily tasks.
+            </p>
+          )}
         </div>
       </div>
     </div>

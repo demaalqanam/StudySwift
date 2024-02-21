@@ -126,7 +126,7 @@ function Header() {
                   alt="profile"
                   src={
                     auth.currentUser?.photoURL === null
-                      ? "https://firebasestorage.googleapis.com/v0/b/study-swift-be3d8.appspot.com/o/files%2F2815428.png?alt=media&token=0e4e0bfc-5575-4358-baae-b8055ec2a61f"
+                      ? "https://firebasestorage.googleapis.com/v0/b/study-swift-be3d8.appspot.com/o/files%2Fillustration-of-human-icon-user-symbol-icon-modern-design-on-blank-background-free-vector.jpg?alt=media&token=84c8b9da-2856-45df-b812-dfeb4ad2f902"
                       : auth.currentUser?.photoURL
                   }
                 />

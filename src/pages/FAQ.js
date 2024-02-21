@@ -18,8 +18,8 @@ function FAQ() {
   const [faqsList, setFaqsList] = useState(null);
   const [selectedSubject, setSelectedSubject] = useState(null);
   const [showForm, setShowForm] = useState(false);
-  const [selectedFAQ, setSelectedFAQ] = useState();
-  const { setOverlay, overlay } = useContext(MyContext);
+  const [loading, setLoading] = useState(true);
+  const { setOverlay, isAdmin } = useContext(MyContext);
   const FAQsRef = collection(db, "FAQs");
   const subject1 = useRef();
   const subject2 = useRef();
@@ -44,6 +44,7 @@ function FAQ() {
         id: doc.id,
       }));
       setFaqsList(List);
+      setLoading(false);
     } catch (error) {
       console.error(error);
     }
@@ -51,6 +52,7 @@ function FAQ() {
 
   const handleSelectedSubject = (e) => {
     const subjects = [subject1, subject2, subject3, subject4, subject5];
+    setLoading(true);
     subjects.map((s) => {
       s.current.classList.remove("active");
     });
@@ -85,11 +87,10 @@ function FAQ() {
 
   /// Handle Delete Action ///
   const handleDelete = async (id, subject) => {
-    console.log(id, subject);
     try {
       const FAQDoc = doc(db, "FAQs", id);
       await deleteDoc(FAQDoc).then(() => {
-        getDocs(subject);
+        getFaq(subject);
       });
     } catch (error) {
       console.error(error);
@@ -172,7 +173,7 @@ function FAQ() {
                     in, etc.
                   </p>
                 </div>
-                {false ? (
+                {isAdmin ? (
                   <div className="h-btns">
                     <button onClick={handleShowCreateForm} className="btn">
                       Create FAQ <IoMdAdd />{" "}
@@ -183,18 +184,10 @@ function FAQ() {
                 )}
               </div>
               <div className="faqs-body">
-                {faqsList === null ? (
-                  <div className="loading-c center">
-                    <div class="spinner-border" role="status"></div>
-                  </div>
-                ) : (
-                  ""
-                )}
-
                 {faqsList?.map((faq, index) => {
                   return (
-                    <div key={index} className="f-item">
-                      {false ? (
+                    <div hidden={loading} key={index} className="f-item">
+                      {isAdmin ? (
                         <AiFillDelete
                           onClick={() => handleDelete(faq.id, faq.subject)}
                           className="icon"
@@ -207,6 +200,13 @@ function FAQ() {
                     </div>
                   );
                 })}
+                {loading ? (
+                  <div className="loading-c center">
+                    <div class="spinner-border" role="status"></div>
+                  </div>
+                ) : (
+                  ""
+                )}
               </div>
             </div>
           </div>

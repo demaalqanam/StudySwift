@@ -6,7 +6,6 @@
   width: 35%;
   position: absolute;
   z-index: 4444;
-  background: #fff;
   padding: 20px;
   border-radius: 4px;
   left: 50%;
@@ -22,7 +21,7 @@
       font-weight: 600;
     }
     button.c {
-      background-color: $primary-color;
+      background-color: $secondary-color;
       color: $text-white;
     }
   }
@@ -31,7 +30,7 @@
   }
 }
 .faq {
-  height: 95%;
+  height: 90%;
   background-color: $first_light_BG;
   margin-top: 97px;
   border-radius: 4px;
@@ -81,7 +80,7 @@
       width: 100%;
 
       button {
-        background-color: $primary-color;
+        background-color: $secondary-color;
         color: $text-white;
         font-weight: 600;
       }
@@ -94,7 +93,6 @@
     display: flex;
     flex-direction: column;
     gap: 15px;
-    margin-top: 20px;
     overflow: hidden;
     overflow-y: scroll;
     /* overflow-y: auto; */
@@ -102,8 +100,10 @@
 
     .f-item {
       width: 100%;
-      height: 170px;
+      height: 160px;
+      min-height: 160px;
       border-radius: 4px;
+      position: relative;
       padding: 10px;
       background-color: #f7f7f7;
       box-shadow: 0 0 9px 0px #f9f9f9;
@@ -111,7 +111,7 @@
       }
       svg {
         position: absolute;
-        right: 35px;
+        right: 10px;
         cursor: pointer;
       }
     }
@@ -122,6 +122,22 @@
 #light .faq {
   background-color: $first_light_BG;
   color: $text_dark_color;
+}
+#dark .create-form {
+  background-color: $dark-primary-color;
+  color: $text-white;
+}
+#light .create-form {
+  background-color: $first_light_BG;
+  color: $text_dark_color;
+}
+#dark .create-form .btn:last-child {
+  color: $text-white;
+}
+#dark .create-form select {
+  background-color: $dark-primary-color;
+  color: $text-white;
+  border-color: $border_dark_color;
 }
 #dark .faq {
   background-color: $dark-primary-color;
