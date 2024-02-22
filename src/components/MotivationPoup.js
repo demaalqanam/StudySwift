@@ -4,7 +4,7 @@ import { FaFacebook, FaTwitter } from "react-icons/fa";
 function MotivationPoup() {
   const [quotes, setQuotes] = React.useState([]);
   const [randomQuote, setRandomQuote] = React.useState("");
-  const [color, setColor] = React.useState("#fff");
+  const [color, setColor] = React.useState("#acb63f");
 
   useEffect(() => {
     fetchData();
