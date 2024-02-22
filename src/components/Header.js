@@ -55,7 +55,10 @@ function Header() {
   return (
     <div className="header ">
       <div className="row justify-content-between w-100">
-        <div className="col">
+        <div className="col d-flex align-items-center">
+          <Link to="/Faq">
+            <FaQuestionCircle className="icon" />
+          </Link>
           <div
             style={{
               display: `${pathname !== "/Sessions" ? "none" : "block"}`,
@@ -97,7 +100,6 @@ function Header() {
           )}
           {auth.currentUser === null ? (
             <div className="signin-buttons">
-              <FaQuestionCircle className="icon" />
               <button onClick={showLogin} className="btn signin-b">
                 Log In
               </button>

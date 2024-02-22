@@ -16,7 +16,7 @@ import {
 } from "firebase/firestore";
 
 function SignIn() {
-  const { closeLogin, handleRerender } = useContext(MyContext);
+  const { closeLogin, showSignUp } = useContext(MyContext);
   const [loginWithEmail, setLoginWithEmail] = useState(false);
   const usersCollectionRef = collection(db, "users");
   const [usernInEmail, setUserInEmail] = useState();
@@ -89,7 +89,7 @@ function SignIn() {
                 Sign in with Google
               </button>
             </div>
-            <a className=" black" href="#">
+            <a className=" black" onClick={showSignUp}>
               or click here to create an account
             </a>
           </div>

@@ -30,6 +30,9 @@
     .options {
       width: 100%;
       text-align: center;
+      a {
+        cursor: pointer;
+      }
       .options-cont {
         display: flex;
         flex-direction: column;
