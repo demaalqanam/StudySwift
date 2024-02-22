@@ -141,7 +141,7 @@ function App() {
       }}
     >
       <Router>
-        <div className="App" id={theme}>
+        <div className="App" id={theme === null ? "dark" : theme}>
           <video
             autoPlay
             muted
