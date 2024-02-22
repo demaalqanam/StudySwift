@@ -179,7 +179,11 @@ function Tasks() {
           <h4>Your Tasks:</h4>
         </div>
         <div className="h-btn center">
-          <button onClick={showCreateWindow} className="btn">
+          <button
+            disabled={auth.currentUser === null}
+            onClick={showCreateWindow}
+            className="btn border-none"
+          >
             Create Task{" "}
           </button>
           <IoMdAdd className="icon" />
