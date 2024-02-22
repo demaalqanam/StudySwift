@@ -18,6 +18,7 @@ import {
 import Stopwatch from "./StopWatch";
 import MusicPlayer from "./MusicPlayer";
 import { MyContext } from "../Context/Context";
+import MotivationPoup from "./MotivationPoup";
 
 function Sessions() {
   const time = new Date();
@@ -176,103 +177,108 @@ function Sessions() {
     );
   };
   return (
-    <div className="sessions">
-      <div className="row">
-        <div className="col">
-          <MusicPlayer
-            showMusicPlayer={showMusicPlayer}
-            setShowMusicPlayer={setShowMusicPlayer}
-          />
-
-          {showBGChanger ? <ChnageBGComponent /> : ""}
-        </div>
-        <div className="col">
-          <div
-            style={{ display: `${showTimer ? "block" : "none"}` }}
-            className="timer"
-          >
-            <BiHide
-              onClick={() => setShowTimer(false)}
-              className="icon hide-i"
+    <>
+      <MotivationPoup />
+      <div className="sessions">
+        <div className="row">
+          <div className="col">
+            <MusicPlayer
+              showMusicPlayer={showMusicPlayer}
+              setShowMusicPlayer={setShowMusicPlayer}
             />
-            <div className="timer-h">
-              {showChooseTime ? choseTimeInput() : ""}
-              <h3>Study Timer</h3>
-              <div className="timer-type">
-                <button
-                  onClick={(e) => handleNavigate(e)}
-                  ref={btn1}
-                  className="btn active"
-                >
-                  Pomodoro
-                </button>
-                <button
-                  onClick={(e) => handleNavigate(e)}
-                  ref={btn2}
-                  className="btn"
-                >
-                  Timer
-                </button>
-              </div>
-            </div>
-            {showStopWatch ? (
-              <Stopwatch />
-            ) : (
-              <div className="timer-body">
-                <div className="t-numbers">
-                  <div>
-                    <span>{days}</span>:<span>{hours}</span>:
-                    <span>{minutes}</span>:<span>{seconds}</span>
-                  </div>
-                  <div className="g-icon">
-                    <button onClick={start}>Start</button>
-                    <FaGear
-                      onClick={() =>
-                        setShowChooseTime((current) =>
-                          current === true ? false : true
-                        )
-                      }
-                    />
-                  </div>
-                </div>
-                <div className="timer-btns">
-                  <button onClick={pause}>Pause</button>
-                  <button onClick={resume}>Resume</button>
+
+            {showBGChanger ? <ChnageBGComponent /> : ""}
+          </div>
+          <div className="col">
+            <div
+              style={{ display: `${showTimer ? "block" : "none"}` }}
+              className="timer"
+            >
+              <BiHide
+                onClick={() => setShowTimer(false)}
+                className="icon hide-i"
+              />
+              <div className="timer-h">
+                {showChooseTime ? choseTimeInput() : ""}
+                <h3>Study Timer</h3>
+                <div className="timer-type">
                   <button
-                    onClick={() => {
-                      // Restarts to 5 minutes timer
-                      const time = new Date();
-                      time.setSeconds(time.getSeconds() + choosedTime * 60);
-                      restart(time);
-                    }}
+                    onClick={(e) => handleNavigate(e)}
+                    ref={btn1}
+                    className="btn active"
                   >
-                    Restart
+                    Pomodoro
                   </button>
-                  <select
-                    onChange={(e) => setSelectedGoal(e.target.value)}
-                    class="form-select"
-                    aria-label="Default select example"
+                  <button
+                    onClick={(e) => handleNavigate(e)}
+                    ref={btn2}
+                    className="btn"
                   >
-                    <option selected>
-                      {auth.currentUser === null ? "No goals." : "Choose goal."}
-                    </option>
-                    {goalsList?.map((goal) => {
-                      return (
-                        <option
-                          value={[goal.id, goal.goalInMin, goal.progress]}
-                        >
-                          {goal?.title}
-                        </option>
-                      );
-                    })}
-                  </select>
+                    Timer
+                  </button>
                 </div>
               </div>
-            )}
+              {showStopWatch ? (
+                <Stopwatch />
+              ) : (
+                <div className="timer-body">
+                  <div className="t-numbers">
+                    <div>
+                      <span>{days}</span>:<span>{hours}</span>:
+                      <span>{minutes}</span>:<span>{seconds}</span>
+                    </div>
+                    <div className="g-icon">
+                      <button onClick={start}>Start</button>
+                      <FaGear
+                        onClick={() =>
+                          setShowChooseTime((current) =>
+                            current === true ? false : true
+                          )
+                        }
+                      />
+                    </div>
+                  </div>
+                  <div className="timer-btns">
+                    <button onClick={pause}>Pause</button>
+                    <button onClick={resume}>Resume</button>
+                    <button
+                      onClick={() => {
+                        // Restarts to 5 minutes timer
+                        const time = new Date();
+                        time.setSeconds(time.getSeconds() + choosedTime * 60);
+                        restart(time);
+                      }}
+                    >
+                      Restart
+                    </button>
+                    <select
+                      onChange={(e) => setSelectedGoal(e.target.value)}
+                      class="form-select"
+                      aria-label="Default select example"
+                    >
+                      <option selected>
+                        {auth.currentUser === null
+                          ? "No goals."
+                          : "Choose goal."}
+                      </option>
+                      {goalsList?.map((goal) => {
+                        return (
+                          <option
+                            value={[goal.id, goal.goalInMin, goal.progress]}
+                          >
+                            {goal?.title}
+                          </option>
+                        );
+                      })}
+                    </select>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

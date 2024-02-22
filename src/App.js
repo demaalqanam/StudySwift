@@ -27,6 +27,7 @@ import Profile from "./pages/Profile";
 import Footer from "./components/Footer";
 import Students from "./pages/Students";
 import { auth } from "./config/firebase";
+import MotivationPopup from "./components/MotivationPoup";
 
 const backgrounds = [
   {

@@ -88,3 +88,68 @@ ul {
   /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   background: linear-gradient(to right bottom, #5ba6c6, #acb63f);
 }
+
+* {
+  transition: all 0.5s ease-in-out;
+}
+
+.custom-container {
+  width: 60%;
+}
+
+#quote-box {
+  position: absolute;
+  bottom: 68px;
+  right: 38px;
+}
+
+.flex {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.child1 {
+  margin-right: 10px;
+}
+
+.child2 {
+  margin-right: 10px;
+}
+.child3 {
+  flex-grow: 1;
+}
+
+.child1 .btn,
+.child2 .btn {
+  background-color: #5ba6c6 !important;
+  border: none;
+}
+
+.child3 .btn {
+  background-color: #acb63f !important;
+  border: none;
+  padding: 6px 40px;
+}
+
+#author {
+  margin-top: 15px;
+  font-size: 14px;
+}
+.card-text {
+  font-size: 19px;
+}
+
+@media (max-width: 445px) {
+  .child3 {
+    margin-top: 10px;
+  }
+}
+#new-quote {
+  width: 100%;
+}
+
+#dark .jumbotron .card {
+  background-color: #242424;
+  color: #fff;
+}
