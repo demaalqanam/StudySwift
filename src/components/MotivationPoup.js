@@ -8,20 +8,11 @@ function MotivationPoup() {
 
   useEffect(() => {
     fetchData();
-    // const intervalId = setInterval(() => {
-    //   fetchData();
-    //   // Code to be executed every 7 seconds
-    //   getNewQuote();
-    // }, 7500); // 7 seconds in milliseconds
-
-    // // Cleanup function to clear the interval when the component unmounts
-    // return () => clearInterval(intervalId);
   }, []);
 
   async function fetchData() {
     const response = await fetch("https://type.fit/api/quotes");
     const data = await response.json();
-    console.log(data);
     setQuotes(data);
     let randIndex = Math.floor(Math.random() * data.length);
     setRandomQuote(data[randIndex]);
@@ -42,8 +33,6 @@ function MotivationPoup() {
     setRandomQuote(quotes[randIndex]);
     setColor(colors[randColorIndex]);
   };
-
-  console.log(color);
 
   return (
     <div className="jumbotron" id="quote-box">

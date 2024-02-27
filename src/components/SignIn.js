@@ -4,22 +4,12 @@ import { IoCloseSharp } from "react-icons/io5";
 import { MyContext } from "../Context/Context";
 import { auth, db, googleProvider } from "../config/firebase";
 import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
-import {
-  addDoc,
-  collection,
-  doc,
-  documentId,
-  getDoc,
-  getDocs,
-  query,
-  where,
-} from "firebase/firestore";
+import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
 
 function SignIn() {
   const { closeLogin, showSignUp } = useContext(MyContext);
   const [loginWithEmail, setLoginWithEmail] = useState(false);
   const usersCollectionRef = collection(db, "users");
-  const [usernInEmail, setUserInEmail] = useState();
   const [isError, setIsError] = useState({ is: false, message: "" });
 
   // login with google account
@@ -29,7 +19,6 @@ function SignIn() {
         console.log(res.user);
         if (res.user !== null) {
           closeLogin();
-          setUserInEmail();
           checkAndCreate(res.user);
         }
       });

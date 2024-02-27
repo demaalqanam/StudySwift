@@ -8,7 +8,6 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
-import { updateCurrentUser, updateProfile, deleteUser } from "firebase/auth";
 import { MyContext } from "../Context/Context";
 
 function Students() {

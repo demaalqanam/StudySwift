@@ -4,20 +4,12 @@ import { MyContext } from "../Context/Context";
 import { auth } from "../config/firebase";
 import {
   createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  updateCurrentUser,
   updateProfile,
   updatePassword,
 } from "firebase/auth";
 import { storage, db } from "../config/firebase";
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
-import {
-  getDocs,
-  collection,
-  addDoc,
-  doc,
-  updateDoc,
-} from "firebase/firestore";
+import { collection, addDoc, doc, updateDoc } from "firebase/firestore";
 
 function SignUp({
   editProfileMode,

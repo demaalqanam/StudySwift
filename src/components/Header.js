@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { FaQuestionCircle } from "react-icons/fa";
 import { MyContext } from "../Context/Context";
 import { auth } from "../config/firebase";
-import { getAuth, signOut } from "firebase/auth";
+import { signOut } from "firebase/auth";
 import { SiApplemusic } from "react-icons/si";
 import { RxLapTimer } from "react-icons/rx";
 import { FaImage } from "react-icons/fa";
@@ -19,16 +19,16 @@ function Header() {
   } = useContext(MyContext);
   const [showOptions, setShowOptions] = useState(false);
   // const user = auth?.currentUser;
-  const [user, setUser] = useState();
+
   const [loading, setLoading] = useState(true);
-  const [count, setCount] = useState(1);
+
   const { pathname } = useLocation();
 
   useEffect(() => {
     auth.onAuthStateChanged(function (user) {
       if (user) {
         setLoading(false);
-        setUser(user);
+
         console.log("user loged in");
         // User is signed in.
       } else {

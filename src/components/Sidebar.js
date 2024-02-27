@@ -8,7 +8,6 @@ import { FaGear } from "react-icons/fa6";
 import SettingsWindow from "./SettingsWindow";
 import { MyContext } from "../Context/Context";
 import { Link, useLocation } from "react-router-dom";
-import { auth } from "../config/firebase";
 
 export const Sidebar = memo(() => {
   const { theme, isAdmin } = useContext(MyContext);

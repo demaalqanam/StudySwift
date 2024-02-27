@@ -1,5 +1,4 @@
 import React, { useState, useContext } from "react";
-import { FaMoon, Sign } from "react-icons/fa";
 import { PiSignInBold, PiSignOut } from "react-icons/pi";
 import "../Style/sass/components/SettingsW.scss";
 import { MyContext } from "../Context/Context";

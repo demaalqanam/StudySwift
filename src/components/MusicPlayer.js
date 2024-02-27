@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
 import AudioPlayer from "react-h5-audio-player";
-import { useAudioPlayer } from "react-use-audio-player";
 import "react-h5-audio-player/lib/styles.css";
 import { RiPlayListFill } from "react-icons/ri";
 import songsData from "../assets/audio/songs.json";
-import aud from "../assets/audio/town-10169.mp3";
 import { BiHide } from "react-icons/bi";
 function MusicPlayer({ showMusicPlayer, setShowMusicPlayer }) {
   const [showLibrary, setShowLibrary] = useState(false);

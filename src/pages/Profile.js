@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from "react";
 import SignUp from "../components/SignUp";
 import {
   MDBCol,
-  MDBContainer,
   MDBRow,
   MDBCard,
   MDBCardText,
@@ -18,15 +17,7 @@ import {
 } from "react-icons/sl";
 
 import { auth, db } from "../config/firebase";
-import { getAuth } from "firebase/auth";
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  where,
-} from "firebase/firestore";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { MyContext } from "../Context/Context";
 import { Link, redirect, useNavigate } from "react-router-dom";
 
@@ -56,7 +47,7 @@ function Profile() {
   }, []);
 
   /// Get user Data
-  const getUserData = async () => {
+  const getUserData = async (user) => {
     try {
       const q = query(usersRef, where("Email", "==", auth.currentUser.email));
       const data = await getDocs(q);
@@ -147,27 +138,23 @@ function Profile() {
                       <MDBRow className="pt-1">
                         <MDBCol size="6" className="mb-3">
                           <MDBTypography tag="h6">Email</MDBTypography>
-                          <MDBCardText className="text-muted">
-                            {user?.Email}
-                          </MDBCardText>
+                          <MDBCardText className="">{user?.Email}</MDBCardText>
                         </MDBCol>
                         <MDBCol size="6" className="mb-3">
                           <MDBTypography tag="h6">Gender</MDBTypography>
-                          <MDBCardText className="text-muted">
-                            {user?.Gender}
-                          </MDBCardText>
+                          <MDBCardText className="">{user?.Gender}</MDBCardText>
                         </MDBCol>
                       </MDBRow>
                       <MDBRow className="pt-1">
                         <MDBCol size="6" className="mb-3">
                           <MDBTypography tag="h6">Birthday</MDBTypography>
-                          <MDBCardText className="text-muted">
+                          <MDBCardText className="">
                             {user?.birthDate}
                           </MDBCardText>
                         </MDBCol>
                         <MDBCol size="6" className="mb-3">
                           <MDBTypography tag="h6">Phone</MDBTypography>
-                          <MDBCardText className="text-muted">
+                          <MDBCardText className="">
                             {user?.phoneNumber}
                           </MDBCardText>
                         </MDBCol>

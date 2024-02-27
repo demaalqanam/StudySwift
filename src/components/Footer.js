@@ -5,7 +5,10 @@ function Footer() {
   return (
     <footer className="footer center">
       <BiCopyright />
-      <p>2024, Mabe By Dema Alghannam.</p>
+      <p>
+        All rights reserved 2024, Mabe By
+        <span style={{ fontWeight: "bold" }}> Dema Alghannam.</span>,
+      </p>
     </footer>
   );
 }

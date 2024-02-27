@@ -8,7 +8,6 @@ import {
   where,
 } from "firebase/firestore";
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { FaRegEdit } from "react-icons/fa";
 import { IoMdAdd } from "react-icons/io";
 import { db } from "../config/firebase";
 import { MyContext } from "../Context/Context";
@@ -16,7 +15,6 @@ import { AiFillDelete } from "react-icons/ai";
 
 function FAQ() {
   const [faqsList, setFaqsList] = useState(null);
-  const [selectedSubject, setSelectedSubject] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [loading, setLoading] = useState(true);
   const { setOverlay, isAdmin } = useContext(MyContext);

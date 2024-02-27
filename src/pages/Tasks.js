@@ -1,7 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import { IoMdAdd } from "react-icons/io";
-import { FaCheck } from "react-icons/fa6";
-import { HiDotsHorizontal } from "react-icons/hi";
 import { MyContext } from "../Context/Context";
 import {
   addDoc,
@@ -11,11 +9,9 @@ import {
   getDocs,
   orderBy,
   query,
-  updateDoc,
   where,
 } from "firebase/firestore";
 import { auth, db } from "../config/firebase";
-import { MdDeleteOutline } from "react-icons/md";
 import TaskItem from "../components/TaskItem";
 import Empty from "../components/Empty";
 
