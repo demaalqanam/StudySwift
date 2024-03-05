@@ -27,25 +27,8 @@ import Profile from "./pages/Profile";
 import Footer from "./components/Footer";
 import Students from "./pages/Students";
 import { auth } from "./config/firebase";
-import MotivationPopup from "./components/MotivationPoup";
+import backgrounds from "./assets/backgrounds/backgrounds.json";
 
-const backgrounds = [
-  {
-    name: "Mountien and clouds.",
-    imgURL:
-      "https://firebasestorage.googleapis.com/v0/b/study-swift-be3d8.appspot.com/o/files%2F1118437_Pine_High_Panoramic_3840x2160%20(1).mp4?alt=media&token=cadbcdf9-06a7-44a3-89b7-7db8fff03dd5",
-  },
-  {
-    name: "Trees View.",
-    imgURL:
-      "https://firebasestorage.googleapis.com/v0/b/study-swift-be3d8.appspot.com/o/files%2F1118435_Mystery_Pine_Trunk_3840x2160.mp4?alt=media&token=904a2db4-a6f4-4d84-a183-22ccf4a0d7bc",
-  },
-  {
-    name: "Bangkok City.",
-    imgURL:
-      "https://firebasestorage.googleapis.com/v0/b/study-swift-be3d8.appspot.com/o/files%2F456055_Bangkok_Thailand_Asia_3840x2160%20(1).mp4?alt=media&token=c57d0441-4f84-4142-a8a6-7bb8102210be",
-  },
-];
 function App() {
   const [theme, setTheme] = useState("dark");
   const [overlay, setOverlay] = useState(false);
@@ -146,7 +129,7 @@ function App() {
           <video
             autoPlay
             muted
-            src={backgrounds[currentBGIndex].imgURL}
+            src={backgrounds[currentBGIndex].video}
             loop
             id="myVideo"
           />

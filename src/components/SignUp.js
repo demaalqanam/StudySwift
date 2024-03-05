@@ -250,8 +250,8 @@ function SignUp({
             style={{ display: editProfileMode ? "none" : "block" }}
           >
             <option selected>Gender</option>
-            <option value="male">Male</option>
-            <option value="famele">Famele</option>
+            <option value="male">male</option>
+            <option value="female">female</option>
           </select>
           <div className="create-btns">
             <button type="submit" class="btn create-btn">

@@ -18,6 +18,16 @@ function MotivationPoup() {
     setRandomQuote(data[randIndex]);
   }
 
+  function removeWord(sentence) {
+    // Create a regular expression to match the wordToRemove
+    const regex = new RegExp("\\b" + "type.fit" + "\\b", "gi");
+
+    // Replace the matched word with an empty string
+    const newSentence = sentence.replace(regex, "");
+
+    return newSentence.trim(); // Trim any leading or trailing spaces
+  }
+
   const getNewQuote = () => {
     const colors = [
       "#acb63f",
@@ -30,6 +40,7 @@ function MotivationPoup() {
     ];
     let randIndex = Math.floor(Math.random() * quotes.length);
     let randColorIndex = Math.floor(Math.random() * colors.length);
+
     setRandomQuote(quotes[randIndex]);
     setColor(colors[randColorIndex]);
   };
@@ -41,11 +52,11 @@ function MotivationPoup() {
         <div className="card-body text-center">
           {randomQuote ? (
             <>
-              <p id="text" className="card-text">
+              <h4 id="text" className="card-text">
                 &quot;{randomQuote.text}&quot;
-              </p>
+              </h4>
               <h5 id="author" className="card-title mb-4">
-                ~ {randomQuote.author || "Anonymous"}
+                ~ {removeWord(randomQuote.author) || "Anonymous"}
               </h5>
             </>
           ) : (
@@ -53,7 +64,7 @@ function MotivationPoup() {
           )}
           <div className="flex">
             <>
-              <div className="child1">
+              {/* <div className="child1">
                 <a
                   href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
                     randomQuote ? randomQuote.text : ""
@@ -77,7 +88,7 @@ function MotivationPoup() {
                 >
                   <FaFacebook className="icon" />
                 </a>
-              </div>
+              </div> */}
             </>
             <div className="child3">
               <button
